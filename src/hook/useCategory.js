@@ -1,45 +1,53 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { getCategories } from "../services/categoryService";
+import { THREE_DOT_URL_ICON } from "../config/config";
 
-const useCategory = () => {
+export const useCategory = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { slug } = useParams(); // <- Lấy slug từ URL nếu có
 
   useEffect(() => {
     setLoading(true);
     getCategories()
       .then((data) => {
-        setCategories([{ id: "all", name: "Tất cả sản phẩm" }, ...data]);
+        setCategories([
+          {
+            id: "all",
+            name: "Tất cả sản phẩm",
+            slug: "all",
+            icon: THREE_DOT_URL_ICON,
+          },
+          ...data,
+        ]);
         setLoading(false);
       })
       .catch((error) => {
         setError(error);
         setLoading(false);
       });
-  });
+  }, []);
 
-  const handleChangeCategory = (categoryId) => {
-    if (categoryId === "all") {
+  const handleChangeCategory = (categorySlug) => {
+    if (categorySlug === "all") {
       navigate("/products");
     } else {
-      navigate(`/products?category=${categoryId}`);
+      navigate(`/products/${categorySlug}`);
     }
   };
 
-  const query = new URLSearchParams(location.search);
-  const currentCategory = query.get("category") || "all";
+  // const query = new URLSearchParams(location.search);
+  // const currentCategory = query.get("category");
 
   return {
     categories,
     loading,
     error,
     handleChangeCategory,
-    currentCategory,
+    currentCategory: slug || "all",
   };
 };
-
-export default useCategory;

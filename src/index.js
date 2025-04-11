@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginForm from "./components/Login/Login";
 import SignUpForm from "./components/Login/Signup";
+import ProductList from "./components/Product/ProductList";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,7 +16,10 @@ root.render(
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<HomePage />} />
+        <Route path="/products" element={<ProductList />} />
+        <Route path="/products/:slug" element={<ProductList />} />
       </Route>
+
       <Route path="/login" element={<LoginForm />} />
       <Route path="/signup" element={<SignUpForm />} />
     </Routes>

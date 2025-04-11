@@ -3,6 +3,7 @@ import "./App.scss";
 import Header from "./components/Header/Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import HomePage from "./components/Home/HomePage";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
       </div>
 
       <div className="main-container">
-        <HomePage />
+        <Outlet />
       </div>
 
       <div className="footer-container"></div>
