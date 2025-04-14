@@ -13,12 +13,11 @@ const CategorySideBar = () => {
       {categories.map((category) => (
         <div className="category-list">
           <img src={category.icon} className="icon-category" alt="" />
-          {/*  */}
+
           <div className="">
             <button
               key={category.id}
-              className={`category-item btn
-            ${currentCategory === String(category.id) ? "active" : ""}`}
+              className="category-item btn"
               onClick={() => handleChangeCategory(category.slug)}
             >
               {category.name}

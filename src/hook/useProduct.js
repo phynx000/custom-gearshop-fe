@@ -6,29 +6,33 @@ import {
 import { useCategory } from "./useCategory";
 
 const useProduct = () => {
-  const categoryHook = useCategory();
-  const [currentCategory, setCurrentCategory] = Array.isArray(categoryHook)
-    ? categoryHook
-    : ["all", () => {}];
+  // const categoryHook = useCategory();
+  // const [currentCategory, setCurrentCategory] = Array.isArray(categoryHook)
+  //   ? categoryHook
+  //   : ["all", () => {}];
+
+  const { currentCategory } = useCategory();
   const [products, setProductsList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     setLoading(true);
+    console.log("currentCategory", currentCategory);
     (currentCategory === "all"
       ? getAllProducts()
       : getProductsByCategory(currentCategory)
     )
       .then((data) => setProductsList(Array.isArray(data) ? data : []))
       .catch((error) => setError(error).finally(() => setLoading(false)));
+
+    console.log("products", products);
   }, [currentCategory]);
 
   return {
     products,
     loading,
     error,
-    setCurrentCategory,
   };
 };
 

@@ -26,7 +26,7 @@ const HomePage = () => {
           </div>
           <div className="carousels-banner col-9">
             <BannerCasourel />
-          </div>
+          </div> 
         </div>
         <div className="row r-2">
           <SellingPoint />
@@ -35,9 +35,9 @@ const HomePage = () => {
         <div className="row r-3">
           <ListFlashSale />
         </div>
-        <button className="btn btn-primary btn-load-more" onClick={handleClick}>
+        {/* <button className="btn btn-primary btn-load-more" onClick={handleClick}>
           Click me
-        </button>
+        </button> */}
       </div>
     </div>
   );

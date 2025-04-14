@@ -1,12 +1,9 @@
 import React from "react";
 import ProductItem from "./ProductItem";
 
-const ListFlashSale = () => {
+const ListFlashSale = ({ product }) => {
   return (
     <div className="list-flash-sale row">
-      <ProductItem />
-      <ProductItem />
-      <ProductItem />
       <ProductItem />
     </div>
   );

@@ -13,9 +13,7 @@ export const getAllProducts = async () => {
 
 export const getProductsByCategory = async (categoryId) => {
   try {
-    const response = await axios.get(
-      `${BASE_API_URL}/products/category/${categoryId}/`
-    );
+    const response = await axios.get(`${BASE_API_URL}/products/${categoryId}/`);
     return Array.isArray(response.data) ? response.data : [];
   } catch (error) {
     console.error(

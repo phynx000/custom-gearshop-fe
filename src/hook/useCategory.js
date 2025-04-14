@@ -19,7 +19,7 @@ export const useCategory = () => {
           {
             id: "all",
             name: "Tất cả sản phẩm",
-            slug: "all",
+            slug: "",
             icon: THREE_DOT_URL_ICON,
           },
           ...data,

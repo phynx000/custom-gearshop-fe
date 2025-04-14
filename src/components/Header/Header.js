@@ -9,16 +9,15 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Link, NavLink, BrowserRouter } from "react-router-dom";
 
-const Header = () => {
+const Navigation = () => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="#home">Gear Shop</Navbar.Brand>
+        <Navbar.Brand href="/">Gear Shop</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
             <Navbar className="bg-body-tertiary justify-content-between"></Navbar>
           </Nav>
 
@@ -53,4 +52,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Navigation;

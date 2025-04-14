@@ -1,15 +1,24 @@
 import React from "react";
 import useProduct from "../../hook/useProduct";
-
+import CategorySideBar from "../CategorySideBar/CategorySideBar";
+import ProductItem from "./ProductItem";
 
 const ProductList = () => {
   const { products, loading, error } = useProduct();
+  // const firstImage = product.images.length > 0 ? product.images[0].image : "https://via.placeholder.com/150";
   return (
-    <div className="product-list">
-      <h4>Danh sách sản phẩm</h4>
-      <div className="row">
-        {/* Render your product items here */}
-        {/* Example: <ProductItem /> */}
+    <div className="product-list-container row">
+      {/* <CategorySideBar /> */}
+      <div className="product-list-title col-lg-12">
+        <h4>Danh sách sản phẩm</h4>
+      </div>
+
+      <div className="product-list-content row">
+        <div className="product-container col-lg-12 d-flex flex-wrap">
+          {products.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))}
+        </div>
       </div>
     </div>
   );
