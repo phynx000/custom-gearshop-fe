@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginForm from "./components/Login/Login";
 import SignUpForm from "./components/Login/Signup";
 import ProductList from "./components/Product/ProductList";
+import ProductDetailPage from "./components/Product/ProductDetailPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -18,6 +19,7 @@ root.render(
         <Route index element={<HomePage />} />
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:slug" element={<ProductList />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
       </Route>
 
       <Route path="/login" element={<LoginForm />} />

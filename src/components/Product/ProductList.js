@@ -2,6 +2,7 @@ import React from "react";
 import useProduct from "../../hook/useProduct";
 import CategorySideBar from "../CategorySideBar/CategorySideBar";
 import ProductItem from "./ProductItem";
+import { Link } from "react-router-dom";
 
 const ProductList = () => {
   const { products, loading, error } = useProduct();
@@ -16,7 +17,9 @@ const ProductList = () => {
       <div className="product-list-content row">
         <div className="product-container col-lg-12 d-flex flex-wrap">
           {products.map((product) => (
-            <ProductItem key={product.id} product={product} />
+            <Link to={`/product/${product.id}`} key={product.id}>
+              <ProductItem key={product.id} product={product} />
+            </Link>
           ))}
         </div>
       </div>
