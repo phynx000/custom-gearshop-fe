@@ -27,7 +27,7 @@ export const getProductsByCategory = async (categoryId) => {
 export const getProductById = async (id) => {
   try {
     const response = await axios.get(`${BASE_API_URL}/products/${id}/`);
-    return Array.isArray(response.data) ? response.data : [];
+    return response.data;
   } catch (error) {
     console.error("Có lỗi xẩy ra khi lấy dữ liệu sản phẩm", error);
     return [];

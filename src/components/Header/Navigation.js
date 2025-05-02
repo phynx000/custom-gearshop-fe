@@ -22,7 +22,7 @@ const Navigation = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <div className="show-category" onClick={handleShow}>
-              <i class="bi bi-list"></i>Danh mục sản phẩm
+              <i className="bi bi-list"></i>Danh mục sản phẩm
             </div>
             <Navbar className="bg-body-tertiary justify-content-between"></Navbar>
           </Nav>

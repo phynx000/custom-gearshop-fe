@@ -25,9 +25,8 @@ const useProduct = () => {
     )
       .then((data) => setProductsList(Array.isArray(data) ? data : []))
       .catch((error) => setError(error).finally(() => setLoading(false)));
-
-    console.log("products", products);
   }, [currentCategory]);
+  // console.log("products", products);
 
   return {
     products,

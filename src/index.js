@@ -9,6 +9,7 @@ import LoginForm from "./components/Login/Login";
 import SignUpForm from "./components/Login/Signup";
 import ProductList from "./components/Product/ProductList";
 import ProductDetailPage from "./components/Product/ProductDetailPage";
+import Cart from "./components/Cart/Cart";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -19,7 +20,8 @@ root.render(
         <Route index element={<HomePage />} />
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:slug" element={<ProductList />} />
-        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/product/:productId" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<Cart />} />
       </Route>
 
       <Route path="/login" element={<LoginForm />} />
