@@ -1,14 +1,35 @@
 import { React, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/style/Login.scss"; // Import CSS file for styling
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic đăng nhập ở đây
+    try {
+      const response = await axios.post("http://localhost:8000/api/login/", {
+        username,
+        password,
+      });
+
+      const { access, refresh, user } = response.data;
+      console.log(refresh, user);
+
+      // ✅ Lưu token và thông tin user vào localStorage
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // 👉 Có thể redirect sang trang chính
+      navigate("/"); // hoặc navigate("/dashboard")
+    } catch (error) {
+      alert("Sai tài khoản hoặc mật khẩu!");
+      console.error("Login failed:", error);
+    }
   };
 
   useEffect(() => {
@@ -20,27 +41,31 @@ const LoginForm = () => {
       <h2>Login</h2>
       <form onSubmit={handleSubmit} className="auth-form">
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Nhập email hoặc tên người dùng"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Nhập mật khẩukhẩu"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="auth-form-button">
-          Login
+        <button
+          type="submit"
+          className="auth-form-button"
+          onClick={handleSubmit}
+        >
+          Đăng nhập
         </button>
       </form>
 
       <div className="auth-form-footer">
         <Link to="/forgot-password" className="auth-form-link">
-          Forgot Password?
+          Quên mật khẩu?
         </Link>
         <div className="auth-social-buttons">
           <button className="auth-social-button google-btn">
