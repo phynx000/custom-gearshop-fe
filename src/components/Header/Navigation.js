@@ -5,8 +5,9 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
 import { useState } from "react";
-import { Link, NavLink, BrowserRouter } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import SidebarWrapper from "../CategorySideBar/SidebarWrapper";
+import "./Navigation.scss";
 
 const Navigation = () => {
   const [show, setShow] = useState(false);

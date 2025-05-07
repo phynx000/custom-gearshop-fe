@@ -14,7 +14,7 @@ body {
 
   
   .category-sidebar{
-    padding: 10px;
+    padding: 20px 25px;
     max-height: 500px;
     overflow-y: auto;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
@@ -38,6 +38,9 @@ body {
 
   .header-container{
     margin: 0 90px;
+    .search-bar{
+      margin: auto;
+    }
     .btn-login {
       border-radius: 5px;
       padding:0 10px;
@@ -54,6 +57,23 @@ body {
 
     
     .btn-signup {
+      border-radius: 5px;
+      padding:0 17px;
+      height: 50px;
+      background-color: #1fad4a;
+      color: #fff;
+      border: none;
+
+      &:hover {
+        background-color: #188739;
+      }
+    }
+
+    .name-user{
+      padding: 10px;
+    }
+
+    .btn-logout{
       border-radius: 5px;
       padding:0 17px;
       height: 50px;

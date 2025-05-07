@@ -8,8 +8,21 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Link, NavLink, BrowserRouter } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../redux/slices/authSlice";
+import "./Header.scss";
 
 const Navigation = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  console.log("isAuth : ", isAuthenticated);
+  const dispatch = useDispatch();
+  const [cartItems] = React.useState(0); // This should be connected to your cart state management
+
+  const handleLogout = () => {
+    dispatch(logout());
+    localStorage.clear();
+  };
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -18,7 +31,7 @@ const Navigation = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Navbar className="bg-body-tertiary justify-content-between"></Navbar>
+            {/* <Navbar className="bg-body-tertiary justify-content-between"></Navbar> */}
           </Nav>
 
           <Nav className="search-bar">
@@ -38,13 +51,29 @@ const Navigation = () => {
             </Form>
           </Nav>
 
-          <Nav className="login-signup-bar">
-            <Link to="/login" rel="prefetch">
-              <button className="btn-login">Đăng nhập</button>
+          <Nav className="ms-auto d-flex align-items-center">
+            <Link to="/cart" className="cart-link">
+              <i className="bi bi-cart3"></i>
+              {cartItems > 0 && <span className="cart-count">{cartItems}</span>}
             </Link>
-            <Link to="/signup">
-              <button className="btn-signup">Đăng ký</button>
-            </Link>
+
+            {isAuthenticated ? (
+              <>
+                <span className="name-user">Chào {user.first_name}</span>
+                <button onClick={handleLogout} className="btn-logout">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Nav className="login-signup-bar">
+                <Link to="/login" rel="prefetch">
+                  <button className="btn-login">Đăng nhập</button>
+                </Link>
+                <Link to="/signup">
+                  <button className="btn-signup">Đăng ký</button>
+                </Link>
+              </Nav>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

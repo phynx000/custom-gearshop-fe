@@ -1,156 +1,161 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
 import "./Cart.scss";
-
-// Mock cart data
-const mockCartData = [
-  {
-    id: 1,
-    productName: "Gaming Mouse",
-    price: 49.99,
-    quantity: 1,
-    image: "https://via.placeholder.com/100",
-    selected: false,
-  },
-  {
-    id: 2,
-    productName: "Mechanical Keyboard",
-    price: 89.99,
-    quantity: 1,
-    image: "https://via.placeholder.com/100",
-    selected: false,
-  },
-  {
-    id: 3,
-    productName: "Gaming Headset",
-    price: 79.99,
-    quantity: 1,
-    image: "https://via.placeholder.com/100",
-    selected: false,
-  },
-];
+import "../../services/cartService";
+import { getAllCartItem } from "../../services/cartService";
+import { data } from "react-router-dom";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState(mockCartData);
+  const [cartItems, setCartItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    getAllCartItem().then((data) => {
+      setCartItems(Array.isArray(data) ? data : []);
+    });
+  }, []);
+
+  console.log("cartitems: ...", cartItems);
+
+  // Calculate total price of selected items
+  const totalPrice = selectedItems.reduce((total, itemId) => {
+    const item = cartItems.find((item) => item.id === itemId);
+    return total + (item ? item.product?.original_price * item.quantity : 0);
+  }, 0);
+
+  // Handle select all checkbox
+  const handleSelectAll = (e) => {
+    const checked = e.target.checked;
+    setSelectAll(checked);
+    setSelectedItems(checked ? cartItems.map((item) => item.id) : []);
+  };
 
   // Handle individual item selection
   const handleItemSelect = (itemId) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === itemId ? { ...item, selected: !item.selected } : item
-      )
-    );
+    setSelectedItems((prev) => {
+      const newSelected = prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId];
+
+      // Update select all checkbox state
+      setSelectAll(newSelected.length === cartItems.length);
+
+      return newSelected;
+    });
   };
 
-  // Handle select all
-  const handleSelectAll = () => {
-    setSelectAll(!selectAll);
-    setCartItems((prevItems) =>
-      prevItems.map((item) => ({ ...item, selected: !selectAll }))
+  // Handle quantity change
+  const handleQuantityChange = (itemId, newQuantity) => {
+    if (newQuantity < 1) return;
+
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      )
     );
   };
 
   // Handle item deletion
   const handleDeleteItem = (itemId) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
-  };
-
-  // Calculate total price of selected items
-  const calculateTotal = () => {
-    return cartItems
-      .filter((item) => item.selected)
-      .reduce((total, item) => total + item.price * item.quantity, 0)
-      .toFixed(2);
+    setCartItems((prev) => prev.filter((item) => item.id !== itemId));
+    setSelectedItems((prev) => prev.filter((id) => id !== itemId));
   };
 
   return (
-    <Container className="cart-container py-4">
-      <h2 className="mb-4">Shopping Cart</h2>
+    <div className="cart-container">
+      <h2>Giỏ hàng</h2>
 
-      <div className="cart-header mb-3">
-        <Form.Check
-          type="checkbox"
-          label="Select All"
-          checked={selectAll}
-          onChange={handleSelectAll}
-        />
-      </div>
+      {cartItems.length === 0 ? (
+        <div className="empty-cart">
+          <p>Trống</p>
+        </div>
+      ) : (
+        <>
+          <div className="cart-header">
+            <div className="select-all">
+              <input
+                type="checkbox"
+                checked={selectAll}
+                onChange={handleSelectAll}
+                id="select-all"
+              />
+              <label htmlFor="select-all">Chọn tất cả</label>
+            </div>
+          </div>
 
-      <Row>
-        <Col md={8}>
-          {cartItems.map((item) => (
-            <Card key={item.id} className="mb-3">
-              <Card.Body>
-                <Row className="align-items-center">
-                  <Col xs={1}>
-                    <Form.Check
-                      type="checkbox"
-                      checked={item.selected}
-                      onChange={() => handleItemSelect(item.id)}
-                    />
-                  </Col>
-                  <Col xs={2}>
-                    <img
-                      src={item.image}
-                      alt={item.productName}
-                      className="img-fluid"
-                    />
-                  </Col>
-                  <Col xs={3}>
-                    <h5>{item.productName}</h5>
-                  </Col>
-                  <Col xs={2}>
-                    <p className="mb-0">${item.price}</p>
-                  </Col>
-                  <Col xs={2}>
-                    <Form.Control
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) => {
-                        const newQuantity = parseInt(e.target.value);
-                        setCartItems((prevItems) =>
-                          prevItems.map((cartItem) =>
-                            cartItem.id === item.id
-                              ? { ...cartItem, quantity: newQuantity }
-                              : cartItem
-                          )
-                        );
-                      }}
-                    />
-                  </Col>
-                  <Col xs={2}>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => handleDeleteItem(item.id)}
-                    >
-                      <i className="bi bi-trash"></i>
-                    </Button>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          ))}
-        </Col>
+          <div className="cart-items">
+            {cartItems.map((item) => (
+              <div key={item.id} className="cart-item">
+                <div className="item-select">
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(item.id)}
+                    onChange={() => handleItemSelect(item.id)}
+                  />
+                </div>
 
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <h4>Order Summary</h4>
-              <div className="d-flex justify-content-between mb-3">
-                <span>Total:</span>
-                <span>${calculateTotal()}</span>
+                <div className="item-image">
+                  <img src={item.product.images[0].image} alt={item.name} />
+                </div>
+                {console.log(item.product.images[0])}
+                <div className="item-details">
+                  <h3>{item.product?.name}</h3>
+                  <p className="price">
+                    $
+                    {item.product?.original_price
+                      ? item.product?.original_price
+                      : "0.00"}
+                  </p>
+                </div>
+
+                <div className="item-quantity">
+                  <button
+                    onClick={() =>
+                      handleQuantityChange(item.id, item.quantity - 1)
+                    }
+                    disabled={item.quantity <= 1}
+                  >
+                    -
+                  </button>
+                  <span>{item.quantity}</span>
+                  <button
+                    onClick={() =>
+                      handleQuantityChange(item.id, item.quantity + 1)
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+
+                <div className="item-total">
+                  ${(item.product?.original_price * item.quantity).toFixed(2)}
+                </div>
+
+                <button
+                  className="delete-button"
+                  onClick={() => handleDeleteItem(item.id)}
+                >
+                  <i className="bi bi-trash"></i>
+                </button>
               </div>
-              <Button variant="primary" className="w-100">
-                Proceed to Checkout
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+            ))}
+          </div>
+
+          <div className="cart-summary">
+            <div className="selected-items">
+              Selected Items: {selectedItems.length}
+            </div>
+            <div className="total-price">Total: ${totalPrice.toFixed(2)}</div>
+            <button
+              className="checkout-button"
+              disabled={selectedItems.length === 0}
+            >
+              Proceed to Checkout
+            </button>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

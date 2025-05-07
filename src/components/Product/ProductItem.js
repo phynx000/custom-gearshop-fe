@@ -18,11 +18,13 @@ const ProductItem = ({ product }) => {
     <Card style={{ width: "15rem" }} className="product-item-card">
       <Card.Img variant="top" src={firstImage} />
       <Card.Body>
-        <Card.Title>{product.name || "error"}</Card.Title>
+        <Card.Title className="product-item-name">
+          {product.name || "error"}
+        </Card.Title>
         <Card.Text>{product.price}</Card.Text>
-        <Button variant="primary" className="btn-addtocard">
+        {/* <Button variant="primary" className="btn-addtocard">
           Thêm vào giỏ hàng
-        </Button>
+        </Button> */}
       </Card.Body>
     </Card>
   );

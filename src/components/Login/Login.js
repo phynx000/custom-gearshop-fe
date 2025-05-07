@@ -2,11 +2,14 @@ import { React, useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/style/Login.scss"; // Import CSS file for styling
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../redux/slices/authSlice";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,14 +20,18 @@ const LoginForm = () => {
       });
 
       const { access, refresh, user } = response.data;
+
       console.log(refresh, user);
 
-      // ✅ Lưu token và thông tin user vào localStorage
+      // Lưu token và thông tin user vào localStorage
       localStorage.setItem("access_token", access);
       localStorage.setItem("refresh_token", refresh);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // 👉 Có thể redirect sang trang chính
+      //  Cập nhật Redux store
+      dispatch(loginSuccess(user));
+
+      // Có thể redirect sang trang chính
       navigate("/"); // hoặc navigate("/dashboard")
     } catch (error) {
       alert("Sai tài khoản hoặc mật khẩu!");
@@ -49,7 +56,7 @@ const LoginForm = () => {
         />
         <input
           type="password"
-          placeholder="Nhập mật khẩukhẩu"
+          placeholder="Nhập mật khẩu"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required

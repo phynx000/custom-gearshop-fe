@@ -6,10 +6,6 @@ import {
 import { useCategory } from "./useCategory";
 
 const useProduct = () => {
-  // const categoryHook = useCategory();
-  // const [currentCategory, setCurrentCategory] = Array.isArray(categoryHook)
-  //   ? categoryHook
-  //   : ["all", () => {}];
 
   const { currentCategory } = useCategory();
   const [products, setProductsList] = useState([]);

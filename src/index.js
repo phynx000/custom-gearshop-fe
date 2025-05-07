@@ -5,29 +5,33 @@ import App from "./App";
 import HomePage from "./components/Home/HomePage";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Provider } from "react-redux";
 import LoginForm from "./components/Login/Login";
 import SignUpForm from "./components/Login/Signup";
 import ProductList from "./components/Product/ProductList";
 import ProductDetailPage from "./components/Product/ProductDetailPage";
 import Cart from "./components/Cart/Cart";
+import store from "./redux/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<HomePage />} />
-        <Route path="/products" element={<ProductList />} />
-        <Route path="/products/:slug" element={<ProductList />} />
-        <Route path="/product/:productId" element={<ProductDetailPage />} />
-        <Route path="/cart" element={<Cart />} />
-      </Route>
+  <Provider store={store}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<HomePage />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/products/:slug" element={<ProductList />} />
+          <Route path="/product/:productId" element={<ProductDetailPage />} />
+          <Route path="/cart" element={<Cart />} />
+        </Route>
 
-      <Route path="/login" element={<LoginForm />} />
-      <Route path="/signup" element={<SignUpForm />} />
-    </Routes>
-  </BrowserRouter>
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/signup" element={<SignUpForm />} />
+      </Routes>
+    </BrowserRouter>
+  </Provider>
 
   // </React.StrictMode>
 );

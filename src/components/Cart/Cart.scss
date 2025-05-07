@@ -1,35 +1,221 @@
 .cart-container {
-  .cart-header {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.25rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  h2 {
+    margin-bottom: 2rem;
+    color: #333;
   }
+}
 
-  .card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
+.empty-cart {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  
+  p {
+    font-size: 1.2rem;
+    color: #666;
+  }
+}
 
-    &:hover {
-      transform: translateY(-2px);
+.cart-header {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+
+  .select-all {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    input[type="checkbox"] {
+      width: 1.2rem;
+      height: 1.2rem;
+      cursor: pointer;
+    }
+
+    label {
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: auto 100px 2fr 1fr 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  .item-select {
+    input[type="checkbox"] {
+      width: 1.2rem;
+      height: 1.2rem;
+      cursor: pointer;
     }
   }
 
-  img {
-    max-width: 100px;
-    height: auto;
-    object-fit: cover;
+  .item-image {
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
   }
 
-  .form-control {
-    width: 80px;
+  .item-details {
+    h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    .price {
+      color: #666;
+      margin: 0;
+    }
   }
 
-  .btn-danger {
-    padding: 0.25rem 0.5rem;
+  .item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    button {
+      width: 2rem;
+      height: 2rem;
+      border: 1px solid #ddd;
+      background-color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+
+      &:hover:not(:disabled) {
+        background-color: #f8f9fa;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    span {
+      min-width: 2rem;
+      text-align: center;
+    }
   }
 
-  .order-summary {
-    position: sticky;
-    top: 1rem;
+  .item-total {
+    font-weight: 500;
+    color: #4a90e2;
+  }
+
+  .delete-button {
+    background: none;
+    border: none;
+    color: #ff4d4f;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #ff7875;
+    }
+  }
+}
+
+.cart-summary {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .selected-items {
+    font-size: 1.1rem;
+  }
+
+  .total-price {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #4a90e2;
+  }
+
+  .checkout-button {
+    padding: 1rem;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #357abd;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .cart-item {
+    grid-template-columns: auto 80px 1fr;
+    grid-template-areas:
+      "select image details"
+      "select image quantity"
+      "select image total"
+      "select image delete";
+    gap: 0.5rem;
+    padding: 0.75rem;
+
+    .item-select {
+      grid-area: select;
+    }
+
+    .item-image {
+      grid-area: image;
+    }
+
+    .item-details {
+      grid-area: details;
+    }
+
+    .item-quantity {
+      grid-area: quantity;
+    }
+
+    .item-total {
+      grid-area: total;
+    }
+
+    .delete-button {
+      grid-area: delete;
+    }
   }
 } 

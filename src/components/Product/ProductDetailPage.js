@@ -16,9 +16,9 @@ const ProductDetailPage = () => {
 
   const { product } = useProductDetail();
 
-  console.log("product xxxx: ", product);
+  // console.log("product currently: ", product);
   const images = product.images || [];
-  console.log("images: ", images);
+  // console.log("images: ", images);
 
   const stores = [
     {
