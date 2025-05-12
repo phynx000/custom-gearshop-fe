@@ -412,39 +412,59 @@
         .purchase-buttons {
           display: flex;
           gap: 15px;
-          margin-bottom: 30px;
-          
-          @media (max-width: 480px) {
-            flex-direction: column;
-          }
+          margin-top: 25px;
           
           button {
             flex: 1;
-            padding: 14px 20px;
-            border-radius: 8px;
+            padding: 12px 20px;
             border: none;
+            border-radius: 4px;
+            cursor: pointer;
             font-weight: 600;
-                    cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             
             &.btn-buy-now {
-              background-color: #2962ff;
+              background-color: #ff4d4f;
               color: white;
               
               &:hover {
-                background-color: #1e4ec7;
-                transform: translateY(-2px);
+                background-color: #ff7875;
               }
             }
             
             &.btn-add-to-cart {
-              background-color: white;
-              border: 1px solid #2962ff;
-              color: #2962ff;
+              background-color: #2962ff;
+              color: white;
+              position: relative;
+              overflow: hidden;
               
               &:hover {
-                background-color: rgba(41, 98, 255, 0.05);
-                transform: translateY(-2px);
+                background-color: #1e50e8;
+              }
+              
+              &:disabled {
+                background-color: #a0a0a0;
+                cursor: not-allowed;
+              }
+              
+              &.adding {
+                animation: pulse 1s infinite;
+                
+                &:before {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  left: -100%;
+                  width: 100%;
+                  height: 100%;
+                  background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent
+                  );
+                  animation: shimmer 1.5s infinite;
+                }
               }
             }
           }
@@ -453,6 +473,7 @@
         .special-offers-section {
           background-color: #fff8e1;
           border-radius: 8px;
+          margin-top: 20px;
           padding: 20px;
           animation: fadeIn 0.5s ease-in-out;
           
@@ -461,6 +482,7 @@
             margin-bottom: 15px;
             color: #333;
             font-weight: 600;
+            
           }
           
           .special-offers-list {
@@ -515,4 +537,25 @@
 
 .error {
   color: #d32f2f;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }

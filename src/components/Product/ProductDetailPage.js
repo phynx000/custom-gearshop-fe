@@ -2,6 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./ProductDetailPage.scss";
 import useProductDetail from "../../hook/useProductDetail";
+import {
+  addProductToCart,
+  showCartNotification,
+} from "../../services/cartService";
 
 const ProductDetailPage = () => {
   const { productId } = useParams();
@@ -12,11 +16,12 @@ const ProductDetailPage = () => {
   const [selectedColor, setSelectedColor] = useState("Black");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   const thumbnailsContainerRef = useRef(null);
 
   const { product } = useProductDetail();
 
-  // console.log("product currently: ", product);
+  console.log("product currently: ", product);
   const images = product.images || [];
   // console.log("images: ", images);
 
@@ -81,7 +86,19 @@ const ProductDetailPage = () => {
     }
   };
 
-  if (loading) return <div className="loading">Loading product details...</div>;
+  const handleAddToCart = async (productId, quantity) => {
+    try {
+      setIsAddingToCart(true);
+      await addProductToCart(productId, quantity);
+      showCartNotification("Đã thêm sản phẩm vào giỏ hàng!");
+    } catch (error) {
+      showCartNotification("Không thể thêm sản phẩm. Vui lòng thử lại sau.");
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  if (loading) return <div className="loading">Dang tải sản phẩm...</div>;
   if (error)
     return <div className="error">Error loading product: {error.message}</div>;
 
@@ -169,7 +186,7 @@ const ProductDetailPage = () => {
                       setSelectedDistrict("");
                     }}
                   >
-                    <option value="">Select a city</option>
+                    {/* <option value="">Chọn thành phố</option> */}
                     {cities.map((city) => (
                       <option key={city} value={city}>
                         {city}
@@ -270,8 +287,14 @@ const ProductDetailPage = () => {
             </div>
 
             <div className="purchase-buttons">
-              <button className="btn-buy-now">Buy Now</button>
-              <button className="btn-add-to-cart">Add to Cart</button>
+              <button className="btn-buy-now">Mua ngay</button>
+              <button
+                className={`btn-add-to-cart ${isAddingToCart ? "adding" : ""}`}
+                onClick={() => handleAddToCart(product.id, 1)}
+                disabled={isAddingToCart}
+              >
+                {isAddingToCart ? "Đang thêm..." : "Thêm vào giỏ hàng"}
+              </button>
             </div>
 
             <div className="special-offers-section">

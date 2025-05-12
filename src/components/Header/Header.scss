@@ -13,20 +13,60 @@
     color: #4a90e2;
   }
 
-  .cart-count {
+  .cart-badge {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -5px;
+    right: -5px;
     background-color: #ff4d4f;
     color: white;
     font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.15rem;
     border-radius: 50%;
-    min-width: 1.5rem;
-    height: 1.5rem;
+    min-width: 1.2rem;
+    height: 1.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 0 0 2px white;
+  }
+}
+
+// Add animation for cart
+@keyframes cartPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes badgePulse {
+  0% {
+    transform: scale(1);
+    background-color: #ff4d4f;
+  }
+  50% {
+    transform: scale(1.5);
+    background-color: #ff7875;
+  }
+  100% {
+    transform: scale(1);
+    background-color: #ff4d4f;
+  }
+}
+
+.cart-animated {
+  i {
+    animation: cartPulse 0.5s ease;
+  }
+  
+  .cart-badge {
+    animation: badgePulse 0.5s ease;
   }
 }
 

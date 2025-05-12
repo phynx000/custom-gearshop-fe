@@ -6,7 +6,6 @@ import {
 import { useCategory } from "./useCategory";
 
 const useProduct = () => {
-
   const { currentCategory } = useCategory();
   const [products, setProductsList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,8 +18,15 @@ const useProduct = () => {
       ? getAllProducts()
       : getProductsByCategory(currentCategory)
     )
-      .then((data) => setProductsList(Array.isArray(data) ? data : []))
-      .catch((error) => setError(error).finally(() => setLoading(false)));
+      .then((data) => {
+        setProductsList(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        setError(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [currentCategory]);
   // console.log("products", products);
 

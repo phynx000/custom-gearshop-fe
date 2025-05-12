@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -10,13 +10,58 @@ import Col from "react-bootstrap/Col";
 import { Link, NavLink, BrowserRouter } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
+import { getAllCartItem } from "../../services/cartService";
 import "./Header.scss";
 
 const Navigation = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  console.log("isAuth : ", isAuthenticated);
   const dispatch = useDispatch();
-  const [cartItems] = React.useState(0); // This should be connected to your cart state management
+  const [cartItemsCount, setCartItemsCount] = useState(0);
+  const [cartAnimated, setCartAnimated] = useState(false);
+
+  // Fetch cart items on component mount and when cart is updated
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAllCartItem()
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setCartItemsCount(data.length);
+            localStorage.setItem("cartItems", JSON.stringify(data));
+          }
+        })
+        .catch(() => {
+          // Fallback to localStorage if API call fails
+          const storedCart = JSON.parse(
+            localStorage.getItem("cartItems") || "[]"
+          );
+          setCartItemsCount(storedCart.length);
+        });
+    } else {
+      // If not authenticated, use localStorage
+      const storedCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      setCartItemsCount(storedCart.length);
+    }
+  }, [isAuthenticated]);
+
+  // Listen for cart updates through window storage events
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      const storedCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      setCartItemsCount(storedCart.length);
+
+      // Trigger animation
+      setCartAnimated(true);
+      setTimeout(() => setCartAnimated(false), 500);
+    };
+
+    // Create a custom event for cart updates
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    // Cleanup listener
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -52,9 +97,14 @@ const Navigation = () => {
           </Nav>
 
           <Nav className="ms-auto d-flex align-items-center">
-            <Link to="/cart" className="cart-link">
+            <Link
+              to="/cart"
+              className={`cart-link ${cartAnimated ? "cart-animated" : ""}`}
+            >
               <i className="bi bi-cart3"></i>
-              {cartItems > 0 && <span className="cart-count">{cartItems}</span>}
+              {cartItemsCount > 0 && (
+                <span className="cart-badge">{cartItemsCount}</span>
+              )}
             </Link>
 
             {isAuthenticated ? (

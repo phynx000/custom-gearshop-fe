@@ -12,6 +12,7 @@ import ProductList from "./components/Product/ProductList";
 import ProductDetailPage from "./components/Product/ProductDetailPage";
 import Cart from "./components/Cart/Cart";
 import store from "./redux/store";
+import Checkout from "./components/Checkout/Checkout";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -25,6 +26,7 @@ root.render(
           <Route path="/products/:slug" element={<ProductList />} />
           <Route path="/product/:productId" element={<ProductDetailPage />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
 
         <Route path="/login" element={<LoginForm />} />

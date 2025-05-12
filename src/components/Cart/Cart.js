@@ -2,64 +2,22 @@ import React, { useState, useEffect } from "react";
 import "./Cart.scss";
 import "../../services/cartService";
 import { getAllCartItem } from "../../services/cartService";
-import { data } from "react-router-dom";
+import { useCart } from "../../hook/useCart";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
-
-  useEffect(() => {
-    getAllCartItem().then((data) => {
-      setCartItems(Array.isArray(data) ? data : []);
-    });
-  }, []);
+  const {
+    cartItems,
+    selectedItems,
+    selectAll,
+    totalPrice,
+    handleSelectAll,
+    handleDeleteItem,
+    handleQuantityChange,
+    handleItemSelect,
+    handleCheckout,
+  } = useCart();
 
   console.log("cartitems: ...", cartItems);
-
-  // Calculate total price of selected items
-  const totalPrice = selectedItems.reduce((total, itemId) => {
-    const item = cartItems.find((item) => item.id === itemId);
-    return total + (item ? item.product?.original_price * item.quantity : 0);
-  }, 0);
-
-  // Handle select all checkbox
-  const handleSelectAll = (e) => {
-    const checked = e.target.checked;
-    setSelectAll(checked);
-    setSelectedItems(checked ? cartItems.map((item) => item.id) : []);
-  };
-
-  // Handle individual item selection
-  const handleItemSelect = (itemId) => {
-    setSelectedItems((prev) => {
-      const newSelected = prev.includes(itemId)
-        ? prev.filter((id) => id !== itemId)
-        : [...prev, itemId];
-
-      // Update select all checkbox state
-      setSelectAll(newSelected.length === cartItems.length);
-
-      return newSelected;
-    });
-  };
-
-  // Handle quantity change
-  const handleQuantityChange = (itemId, newQuantity) => {
-    if (newQuantity < 1) return;
-
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === itemId ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  // Handle item deletion
-  const handleDeleteItem = (itemId) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== itemId));
-    setSelectedItems((prev) => prev.filter((id) => id !== itemId));
-  };
 
   return (
     <div className="cart-container">
@@ -97,14 +55,15 @@ const Cart = () => {
                 <div className="item-image">
                   <img src={item.product.images[0].image} alt={item.name} />
                 </div>
-                {console.log(item.product.images[0])}
+                {/* {console.log(item.product.images[0])} */}
                 <div className="item-details">
                   <h3>{item.product?.name}</h3>
                   <p className="price">
-                    $
-                    {item.product?.original_price
-                      ? item.product?.original_price
-                      : "0.00"}
+                    {/* format gía tiên thành vnd */}
+                    {new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(item.product?.original_price)}
                   </p>
                 </div>
 
@@ -128,7 +87,12 @@ const Cart = () => {
                 </div>
 
                 <div className="item-total">
-                  ${(item.product?.original_price * item.quantity).toFixed(2)}
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(
+                    (item.product?.original_price * item.quantity).toFixed(0)
+                  )}
                 </div>
 
                 <button
@@ -143,14 +107,21 @@ const Cart = () => {
 
           <div className="cart-summary">
             <div className="selected-items">
-              Selected Items: {selectedItems.length}
+              Sản phẩm đã chọn: {selectedItems.length}
             </div>
-            <div className="total-price">Total: ${totalPrice.toFixed(2)}</div>
+            <div className="total-price">
+              Tổng cộng:{" "}
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(totalPrice.toFixed(0))}{" "}
+            </div>
             <button
               className="checkout-button"
               disabled={selectedItems.length === 0}
+              onClick={handleCheckout}
             >
-              Proceed to Checkout
+              Tiến hành thanh toán
             </button>
           </div>
         </>
