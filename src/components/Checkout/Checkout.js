@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Checkout.scss";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import {
+  createVnpayOrder,
+  createCodOrder,
+  formatVnpayOrderData,
+} from "../../services/paymentService";
+import { verifyTokenValidity } from "../../utils/auth";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -11,6 +18,7 @@ const Checkout = () => {
       address: "",
       phone: "",
       email: "",
+      note: "",
     },
     paymentMethod: "COD",
   });
@@ -20,6 +28,20 @@ const Checkout = () => {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
+    // Check if user is authenticated
+    const checkAuth = async () => {
+      const isValid = await verifyTokenValidity();
+      if (!isValid) {
+        setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      }
+    };
+
+    checkAuth();
+
     // Read checkout items from localStorage
     const checkoutItems = JSON.parse(
       localStorage.getItem("checkoutItems") || "[]"
@@ -76,9 +98,10 @@ const Checkout = () => {
   };
 
   const calculateTotal = () => {
-    return formData.products.reduce((total, product) => {
+    const total = formData.products.reduce((total, product) => {
       return total + product.product?.original_price * product.quantity;
     }, 0);
+    return Math.round(total); // ✅ Làm tròn tại đây
   };
 
   const validateForm = () => {
@@ -110,36 +133,80 @@ const Checkout = () => {
 
     if (!validateForm()) return;
 
+    // Verify token validity before proceeding
+    const isTokenValid = await verifyTokenValidity();
+    if (!isTokenValid) {
+      setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const orderData = {
-        products: formData.products.map(({ id, quantity }) => ({
-          id,
-          quantity,
-        })),
-        shipping: formData.shipping,
-        paymentMethod: formData.paymentMethod,
-        totalAmount: calculateTotal(),
-      };
-
-      const response = await fetch("/api/orders/create/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      const data = await response.json();
-
       if (formData.paymentMethod === "VNPAY") {
-        window.location.href = data.payment_url;
+        // Create data for VNPAY order
+        const vnpayOrderData = formatVnpayOrderData({
+          totalAmount: calculateTotal(),
+          shipping: formData.shipping,
+          products: formData.products,
+        });
+
+        // Call VNPAY API
+        const response = await createVnpayOrder(vnpayOrderData);
+
+        // Handle VNPAY response with payment URL
+        if (response && response.payment_url) {
+          // Redirect to VNPAY payment gateway
+          window.location.href = response.payment_url;
+          return; // Stop execution after redirect
+        } else {
+          throw new Error("No payment URL received from VNPAY");
+        }
       } else {
+        // Handle COD payment
+        const codOrderData = {
+          products: formData.products.map(({ id, quantity }) => ({
+            id,
+            quantity,
+          })),
+          shipping: formData.shipping,
+          paymentMethod: formData.paymentMethod,
+          totalAmount: calculateTotal(),
+        };
+
+        // Call COD order API
+        await createCodOrder(codOrderData);
         setSuccess(true);
       }
     } catch (err) {
-      setError("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
+      console.error("Order error:", err);
+
+      // Handle different types of errors
+      if (
+        err.message === "Authentication token not found. Please log in again."
+      ) {
+        setError(
+          "Bạn cần đăng nhập lại để tiếp tục. Phiên đăng nhập đã hết hạn."
+        );
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else if (err.response && err.response.status === 401) {
+        setError("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else if (err.response && err.response.data && err.response.data.error) {
+        // Show specific error message from API
+        setError(err.response.data.error);
+      } else {
+        setError("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -259,6 +326,17 @@ const Checkout = () => {
               required
             />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="note">Ghi chú</label>
+            <textarea
+              id="note"
+              name="note"
+              value={formData.shipping.note}
+              onChange={handleInputChange}
+              placeholder="Ghi chú cho đơn hàng (tùy chọn)"
+            />
+          </div>
         </div>
 
         {/* Payment Section */}
@@ -287,6 +365,24 @@ const Checkout = () => {
                 onChange={handlePaymentMethodChange}
               />
               <label htmlFor="vnpay">Thanh toán qua VNPAY</label>
+
+              {formData.paymentMethod === "VNPAY" && (
+                <div className="payment-info">
+                  <p>
+                    Bạn sẽ được chuyển đến cổng thanh toán VNPAY để hoàn tất
+                    giao dịch sau khi nhấn "Hoàn tất đặt hàng".
+                  </p>
+                  <div className="vnpay-logo">
+                    <img
+                      src="/images/vnpay-logo.png"
+                      alt="VNPAY"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -303,7 +399,11 @@ const Checkout = () => {
           className="submit-button"
           disabled={isSubmitting || formData.products.length === 0}
         >
-          {isSubmitting ? "Đang xử lý..." : "Hoàn tất đặt hàng"}
+          {isSubmitting
+            ? "Đang xử lý..."
+            : formData.paymentMethod === "VNPAY"
+            ? "Tiến hành thanh toán qua VNPAY"
+            : "Hoàn tất đặt hàng"}
         </button>
       </form>
     </div>

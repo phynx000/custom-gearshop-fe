@@ -13,25 +13,45 @@ import ProductDetailPage from "./components/Product/ProductDetailPage";
 import Cart from "./components/Cart/Cart";
 import store from "./redux/store";
 import Checkout from "./components/Checkout/Checkout";
+import AuthProvider from "./components/AuthProvider";
+import ProtectedRoute from "./components/ProtectedRoute";
+import VnpayReturnPage from "./components/Payment/VnpayReturnPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
   <Provider store={store}>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<HomePage />} />
-          <Route path="/products" element={<ProductList />} />
-          <Route path="/products/:slug" element={<ProductList />} />
-          <Route path="/product/:productId" element={<ProductDetailPage />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Route>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<HomePage />} />
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/products/:slug" element={<ProductList />} />
+            <Route path="/product/:productId" element={<ProductDetailPage />} />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute>
+                  <Checkout />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/payment/vnpay-return" element={<VnpayReturnPage />} />
+          </Route>
 
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/signup" element={<SignUpForm />} />
-      </Routes>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignUpForm />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   </Provider>
 

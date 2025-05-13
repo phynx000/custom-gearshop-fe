@@ -9,9 +9,7 @@ export const getAllCartItem = async () => {
     const response = await axios.get(`${BASE_API_URL}/cart/items/`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        
       },
-      
     });
     return Array.isArray(response.data) ? response.data : [];
   } catch (error) {

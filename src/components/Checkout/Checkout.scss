@@ -115,7 +115,7 @@
     color: #333;
   }
 
-  input {
+  input, textarea {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
@@ -127,6 +127,11 @@
       border-color: #4a90e2;
     }
   }
+  
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
 }
 
 .payment-methods {
@@ -136,13 +141,45 @@
 
   .payment-method {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-
-    input[type="radio"] {
-      width: 1.2rem;
-      height: 1.2rem;
+    flex-direction: column;
+    
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      
+      input[type="radio"] {
+        width: 1.2rem;
+        height: 1.2rem;
+        margin: 0;
+      }
+    }
+    
+    .payment-info {
+      margin-left: 1.7rem;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      
+      p {
+        margin-bottom: 0.75rem;
+        color: #666;
+      }
+      
+      .vnpay-logo {
+        display: flex;
+        justify-content: center;
+        margin: 0.5rem 0;
+        
+        img {
+          max-height: 30px;
+          max-width: 100px;
+        }
+      }
     }
   }
 }
