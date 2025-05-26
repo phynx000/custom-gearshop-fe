@@ -1,5 +1,6 @@
 import React from "react";
 import SellingPointItem from "./SellingPointItem";
+import { Row } from "react-bootstrap";
 
 const SellingPoint = () => {
   const sellingPoints = [
@@ -31,11 +32,11 @@ const SellingPoint = () => {
   ];
 
   return (
-    <div className="row">
+    <Row className="text-center justify-content-between g-3">
       {sellingPoints.map((point, index) => (
         <SellingPointItem key={index} item={point} />
       ))}
-    </div>
+    </Row>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-// import CategoryItem from "./CategoryItem";
+import { ListGroup, Image } from "react-bootstrap";
 import { useCategory } from "../../hook/useCategory";
 
 const CategorySideBar = () => {
@@ -7,26 +7,41 @@ const CategorySideBar = () => {
     useCategory();
 
   return (
-    <div>
-      <h4>Danh Mục</h4>
+    <div className="category-sidebar">
+      <h5 className="mb-3 fw-bold">Danh Mục Sản Phẩm</h5>
 
-      {categories.map((category) => (
-        <div className="category-list">
-          <img src={category.icon} className="icon-category" alt="" />
-
-          <div className="">
-            <button
-              key={category.id}
-              className="category-item btn"
-              onClick={() => handleChangeCategory(category.slug)}
-            >
-              {category.name}
-              {/* {console.log(category.icon)}   */}
-              {/* {console.log(currentCategory)} */}
-            </button>
+      {loading ? (
+        <div className="text-center py-3">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-      ))}
+      ) : error ? (
+        <div className="alert alert-danger">Không thể tải danh mục</div>
+      ) : (
+        <ListGroup variant="flush">
+          {categories.map((category) => (
+            <ListGroup.Item
+              key={category.id}
+              action
+              active={category.slug === currentCategory}
+              onClick={() => handleChangeCategory(category.slug)}
+              className="d-flex align-items-center px-2 py-3 border-bottom"
+            >
+              {category.icon && (
+                <Image
+                  src={category.icon}
+                  className="me-2"
+                  width="24"
+                  height="24"
+                  alt={category.name}
+                />
+              )}
+              <span>{category.name}</span>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      )}
     </div>
   );
 };

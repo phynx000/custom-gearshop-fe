@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -7,13 +6,14 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Link, NavLink, BrowserRouter } from "react-router-dom";
+import InputGroup from "react-bootstrap/InputGroup";
+import { Link, NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
 import { getAllCartItem } from "../../services/cartService";
 import "./Header.scss";
 
-const Navigation = () => {
+const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [cartItemsCount, setCartItemsCount] = useState(0);
@@ -69,60 +69,75 @@ const Navigation = () => {
   };
 
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container>
-        <Navbar.Brand href="/">Gear Shop</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+    <Navbar expand="lg" className="py-3">
+      <Container fluid>
+        <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">
+          Gear Shop
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbarContent" />
+        <Navbar.Collapse id="navbarContent">
           <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            {/* <Navbar className="bg-body-tertiary justify-content-between"></Navbar> */}
+            <Nav.Link as={Link} to="/" className="me-3">
+              Trang chủ
+            </Nav.Link>
           </Nav>
 
-          <Nav className="search-bar">
-            <Form inline>
-              <Row>
-                <Col xs="auto">
-                  <Form.Control
-                    type="text"
-                    placeholder="Bạn cần tìm kiếm gì ?"
-                    className=" mr-sm-2"
-                  />
-                </Col>
-                <Col xs="auto">
-                  <Button type="submit">Tìm kiếm</Button>
-                </Col>
-              </Row>
-            </Form>
-          </Nav>
+          <Form className="d-flex mx-auto" style={{ maxWidth: "500px" }}>
+            <InputGroup>
+              <Form.Control
+                type="search"
+                placeholder="Bạn cần tìm kiếm gì?"
+                aria-label="Search"
+                className="border-end-0"
+              />
+              <Button
+                variant="outline-success"
+                type="submit"
+                className="d-flex align-items-center"
+              >
+                <i className="bi bi-search"></i>
+              </Button>
+            </InputGroup>
+          </Form>
 
           <Nav className="ms-auto d-flex align-items-center">
             <Link
               to="/cart"
-              className={`cart-link ${cartAnimated ? "cart-animated" : ""}`}
+              className="position-relative me-4 text-decoration-none d-flex align-items-center"
             >
-              <i className="bi bi-cart3"></i>
+              <i className="bi bi-cart3 fs-4 text-dark"></i>
               {cartItemsCount > 0 && (
-                <span className="cart-badge">{cartItemsCount}</span>
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {cartItemsCount}
+                  <span className="visually-hidden">items in cart</span>
+                </span>
               )}
             </Link>
 
             {isAuthenticated ? (
-              <>
-                <span className="name-user">Chào {user.first_name}</span>
-                <button onClick={handleLogout} className="btn-logout">
-                  Logout
-                </button>
-              </>
+              <div className="d-flex align-items-center">
+                <span className="me-3">Chào {user.first_name}</span>
+                <Button
+                  variant="success"
+                  className="rounded-pill px-3"
+                  onClick={handleLogout}
+                >
+                  Đăng xuất
+                </Button>
+              </div>
             ) : (
-              <Nav className="login-signup-bar">
-                <Link to="/login" rel="prefetch">
-                  <button className="btn-login">Đăng nhập</button>
+              <div className="d-flex">
+                <Link to="/login" className="text-decoration-none me-2">
+                  <Button variant="success" className="rounded-pill px-3">
+                    Đăng nhập
+                  </Button>
                 </Link>
-                <Link to="/signup">
-                  <button className="btn-signup">Đăng ký</button>
+                <Link to="/signup" className="text-decoration-none">
+                  <Button variant="success" className="rounded-pill px-3">
+                    Đăng ký
+                  </Button>
                 </Link>
-              </Nav>
+              </div>
             )}
           </Nav>
         </Navbar.Collapse>
@@ -131,4 +146,4 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
+export default Header;

@@ -16,6 +16,7 @@ import Checkout from "./components/Checkout/Checkout";
 import AuthProvider from "./components/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute";
 import VnpayReturnPage from "./components/Payment/VnpayReturnPage";
+import OrderSuccessPage from "./components/OrderSuccess/OrderSuccessPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -46,6 +47,7 @@ root.render(
               }
             />
             <Route path="/payment/vnpay-return" element={<VnpayReturnPage />} />
+            <Route path="/order-success" element={<OrderSuccessPage />} />
           </Route>
 
           <Route path="/login" element={<LoginForm />} />
