@@ -9,8 +9,11 @@ function useQuery() {
 }
 
 const OrderSuccessPage = () => {
-  const query = useQuery();
-  const orderId = query.get("orderId");
+  //   const query = useQuery();
+  //   const orderId = query.get("orderId");
+  const location = useLocation();
+  const orderId = location.state?.orderId;
+  //   console.log("order id: ", orderId);
   const navigate = useNavigate();
 
   return (

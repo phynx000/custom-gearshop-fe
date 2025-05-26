@@ -33,8 +33,10 @@ const VnpayReturnPage = () => {
           setMessage("Thanh toán thành công");
           // Redirect to order-success page after 3 seconds
           setTimeout(() => {
-            navigate("/order-success");
-          }, 3000);
+            const orderId = response.data.order_id;
+            console.log("respone at order success: ", response.data);
+            navigate("/order-success", { state: { orderId } });
+          }, 1000);
         } else {
           setMessage(
             "Có lỗi xảy ra trong quá trình xử lý thanh toán. Vui lòng liên hệ hỗ trợ."
