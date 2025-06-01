@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
 import { getAllCartItem } from "../../services/cartService";
@@ -18,7 +18,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const [cartAnimated, setCartAnimated] = useState(false);
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
   // Fetch cart items on component mount and when cart is updated
   useEffect(() => {
     if (isAuthenticated) {
@@ -68,6 +69,14 @@ const Header = () => {
     localStorage.clear();
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to products page with search query
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <Navbar expand="lg" className="py-3">
       <Container fluid>
@@ -82,13 +91,15 @@ const Header = () => {
             </Nav.Link>
           </Nav>
 
-          <Form className="d-flex mx-auto" style={{ maxWidth: "500px" }}>
+          <Form onSubmit={handleSearch} className="d-flex mx-auto" style={{ maxWidth: "500px" }}>
             <InputGroup>
               <Form.Control
                 type="search"
                 placeholder="Bạn cần tìm kiếm gì?"
                 aria-label="Search"
                 className="border-end-0"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <Button
                 variant="outline-success"

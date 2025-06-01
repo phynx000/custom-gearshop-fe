@@ -168,9 +168,14 @@ const ProductDetailPage = () => {
             <div className="box-contents-section">
               <h3>Trong hộp có gì ?</h3>
               <ul className="box-contents-list">
-                {product.box_content.box_content.map((item, index) => (
+                {/* {product.box_content.box_content.map((item, index) => (
                   <li key={index}>{item}</li>
-                ))}
+                ))} */}
+
+                {Array.isArray(product?.box_content?.box_content) &&
+                  product.box_content.box_content.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
               </ul>
             </div>
 
