@@ -98,6 +98,20 @@ const ProductList = () => {
 
   const displayProducts = showAllProducts ? products : products.slice(0, 15);
   const showMoreButton = !showAllProducts && products.length > 15;
+  const showLessButton = showAllProducts && products.length > 15;
+
+  const handleShowMore = () => {
+    setShowAllProducts(true);
+  };
+
+  const handleShowLess = () => {
+    setShowAllProducts(false);
+    // Scroll to top of the product list for better UX
+    const cardHeader = document.querySelector(".card-header");
+    if (cardHeader) {
+      cardHeader.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   if (loading) {
     return (
@@ -229,16 +243,30 @@ const ProductList = () => {
                 </div>
               )}
 
-              {showMoreButton && (
-                <div className="d-flex justify-content-center mt-4">
-                  <Button
-                    variant="outline-success"
-                    onClick={() => setShowAllProducts(true)}
-                    className="px-4"
-                  >
-                    <i className="bi bi-chevron-down me-2"></i>
-                    Hiển thị thêm
-                  </Button>
+              {/* Show More/Less Buttons */}
+              {(showMoreButton || showLessButton) && (
+                <div className="d-flex justify-content-center mt-4 gap-3">
+                  {showMoreButton && (
+                    <Button
+                      variant="outline-success"
+                      onClick={handleShowMore}
+                      className="px-4"
+                    >
+                      <i className="bi bi-chevron-down me-2"></i>
+                      Hiển thị thêm ({products.length - 15} sản phẩm)
+                    </Button>
+                  )}
+
+                  {showLessButton && (
+                    <Button
+                      variant="outline-secondary"
+                      onClick={handleShowLess}
+                      className="px-4"
+                    >
+                      <i className="bi bi-chevron-up me-2"></i>
+                      Ẩn bớt
+                    </Button>
+                  )}
                 </div>
               )}
             </Card.Body>

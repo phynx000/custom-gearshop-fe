@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./ProductDetailPage.scss";
 import useProductDetail from "../../hook/useProductDetail";
+import { getProductVersions } from "../../services/productService";
 import {
   addProductToCart,
   showCartNotification,
@@ -9,22 +10,65 @@ import {
 
 const ProductDetailPage = () => {
   const { productId } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedVersion, setSelectedVersion] = useState("8GB / 256GB");
+  const [selectedVersion, setSelectedVersion] = useState("");
   const [selectedColor, setSelectedColor] = useState("Black");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [productVersions, setProductVersions] = useState([]);
+  const [versionsLoading, setVersionsLoading] = useState(false);
   const thumbnailsContainerRef = useRef(null);
-
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [showFullSpecifications, setShowFullSpecifications] = useState(false);
+  
   const { product } = useProductDetail();
 
   console.log("product currently: ", product);
   const images = product.images || [];
-  // console.log("images: ", images);
 
+  // Process description data
+  const getDescriptionContent = () => {
+    if (!product.description || !Array.isArray(product.description)) {
+      return [];
+    }
+
+    return product.description.filter(
+      (item) =>
+        item && typeof item === "object" && item.content && item.content.trim()
+    );
+  };
+
+  const getSpecifications = () => {
+    return product.specifications || [];
+  };
+
+  // Get limited specifications content (first 5 items by default)
+  const getLimitedSpecifications = () => {
+    const fullSpecs = getSpecifications();
+    return showFullSpecifications ? fullSpecs : fullSpecs.slice(0, 5);
+  };
+
+  // Check if specifications has more content than the limit
+  const hasMoreSpecifications = () => {
+    return getSpecifications().length > 5;
+  };
+
+  // Get limited description content (first 3 items by default)
+  const getLimitedDescriptionContent = () => {
+    const fullContent = getDescriptionContent();
+    return showFullDescription ? fullContent : fullContent.slice(0, 3);
+  };
+
+  // Check if description has more content than the limit
+  const hasMoreDescription = () => {
+    return getDescriptionContent().length > 3;
+  };
+
+  // ...existing store data and functions...
   const stores = [
     {
       city: "Ho Chi Minh",
@@ -57,8 +101,31 @@ const ProductDetailPage = () => {
       store.city === selectedCity && store.district === selectedDistrict
   );
 
+  // Load product versions when product changes
   useEffect(() => {
-    // Simulate API call
+    if (product?.id) {
+      loadProductVersions(product.id);
+      setSelectedVersion(product.version || "");
+    }
+  }, [product?.id]);
+
+  const loadProductVersions = async (currentProductId) => {
+    try {
+      setVersionsLoading(true);
+      const versionsData = await getProductVersions(currentProductId);
+      setProductVersions(versionsData.versions || []);
+    } catch (error) {
+      console.error("Error loading product versions:", error);
+    } finally {
+      setVersionsLoading(false);
+    }
+  };
+
+  const handleVersionChange = (versionProduct) => {
+    navigate(`/product/${versionProduct.id}`);
+  };
+
+  useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -98,7 +165,7 @@ const ProductDetailPage = () => {
     }
   };
 
-  if (loading) return <div className="loading">Dang tải sản phẩm...</div>;
+  if (loading) return <div className="loading">Đang tải sản phẩm...</div>;
   if (error)
     return <div className="error">Error loading product: {error.message}</div>;
 
@@ -107,10 +174,16 @@ const ProductDetailPage = () => {
       <div className="product-detail-container">
         <div className="product-detail-header">
           <h1>{product.name}</h1>
+          {product.product_group && (
+            <p className="product-group">
+              Dòng sản phẩm: {product.product_group}
+            </p>
+          )}
         </div>
 
         <div className="product-detail-content">
           <div className="product-detail-left">
+            {/* Image Slider */}
             <div className="product-detail-slider">
               <div className="product-detail-images">
                 {images.map((image, index) => (
@@ -165,13 +238,63 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
+            {/* Product Description Section - Only keep description on left */}
+            <div className="product-description-section">
+              <h3>Mô tả sản phẩm</h3>
+              <div className="description-content">
+                {getLimitedDescriptionContent().length > 0 ? (
+                  <>
+                    {getLimitedDescriptionContent().map((item, index) => {
+                      if (item.type === "title") {
+                        return (
+                          <h4 key={index} className="description-title">
+                            {item.content}
+                          </h4>
+                        );
+                      } else if (item.type === "text") {
+                        return (
+                          <p key={index} className="description-text">
+                            {item.content}
+                          </p>
+                        );
+                      }
+                      return null;
+                    })}
+
+                    {hasMoreDescription() && (
+                      <div className="description-toggle">
+                        <button
+                          className="toggle-button"
+                          onClick={() =>
+                            setShowFullDescription(!showFullDescription)
+                          }
+                        >
+                          <span>
+                            {showFullDescription ? "Ẩn bớt" : "Hiển thị thêm"}
+                          </span>
+                          <i
+                            className={`fas ${
+                              showFullDescription
+                                ? "fa-chevron-up"
+                                : "fa-chevron-down"
+                            }`}
+                          ></i>
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="no-description">
+                    Chưa có mô tả chi tiết cho sản phẩm này.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Box Contents */}
             <div className="box-contents-section">
               <h3>Trong hộp có gì ?</h3>
               <ul className="box-contents-list">
-                {/* {product.box_content.box_content.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))} */}
-
                 {Array.isArray(product?.box_content?.box_content) &&
                   product.box_content.box_content.map((item, index) => (
                     <li key={index}>{item}</li>
@@ -179,6 +302,7 @@ const ProductDetailPage = () => {
               </ul>
             </div>
 
+            {/* Store Availability */}
             <div className="store-availability-section">
               <h3>Cửa hàng còn hàng</h3>
               <div className="store-selectors">
@@ -191,7 +315,7 @@ const ProductDetailPage = () => {
                       setSelectedDistrict("");
                     }}
                   >
-                    {/* <option value="">Chọn thành phố</option> */}
+                    <option value="">Chọn thành phố</option>
                     {cities.map((city) => (
                       <option key={city} value={city}>
                         {city}
@@ -206,7 +330,7 @@ const ProductDetailPage = () => {
                     onChange={(e) => setSelectedDistrict(e.target.value)}
                     disabled={!selectedCity}
                   >
-                    <option value="">Select a district</option>
+                    <option value="">Chọn quận/huyện</option>
                     {districts.map((district) => (
                       <option key={district} value={district}>
                         {district}
@@ -218,13 +342,13 @@ const ProductDetailPage = () => {
 
               {selectedCity && selectedDistrict && (
                 <div className="available-stores">
-                  <h4>Available Stores</h4>
+                  <h4>Cửa hàng có sẵn</h4>
                   <ul className="stores-list">
                     {availableStores.map((store, index) => (
                       <li key={index}>
                         <span className="store-name">{store.name}</span>
                         <span className="store-stock">
-                          {store.stock} units available
+                          {store.stock} sản phẩm có sẵn
                         </span>
                       </li>
                     ))}
@@ -235,6 +359,7 @@ const ProductDetailPage = () => {
           </div>
 
           <div className="product-options-container">
+            {/* Product Info */}
             <div className="product-info">
               <div className="product-price">
                 <span className="current-price">
@@ -243,54 +368,62 @@ const ProductDetailPage = () => {
                     currency: "VND",
                   }).format(product.original_price)}
                 </span>
-                {/* hiển thị giá giảm ở đây */}
-                {/* {product.original_price && (
-                  <span className="original-price">
-                    {new Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    }).format(product.originalPrice)}
-                  </span>
-                )} */}
               </div>
             </div>
 
+            {/* Product Options */}
             <div className="product-options">
-              <div className="option-group">
-                <h4>Select Version</h4>
-                <div className="option-list">
-                  {/* {product.versions.map((version, index) => (
-                    <button
-                      key={index}
-                      className={`option-item ${
-                        selectedVersion === version ? "selected" : ""
-                      }`}
-                      onClick={() => setSelectedVersion(version)}
-                    >
-                      {version}
-                    </button>
-                  ))} */}
+              {(productVersions.length > 0 || product.version) && (
+                <div className="option-group">
+                  <h4>Chọn phiên bản</h4>
+                  {versionsLoading ? (
+                    <div className="loading-versions">
+                      Đang tải phiên bản...
+                    </div>
+                  ) : (
+                    <div className="option-list">
+                      <button
+                        className="option-item selected current-version"
+                        disabled
+                      >
+                        {product.version || "Phiên bản hiện tại"}
+                        <span className="current-label">(Hiện tại)</span>
+                      </button>
+
+                      {productVersions.map((versionProduct) => (
+                        <button
+                          key={versionProduct.id}
+                          className="option-item version-option"
+                          onClick={() => handleVersionChange(versionProduct)}
+                          title={`Chuyển đến ${versionProduct.name}`}
+                        >
+                          <div className="version-info">
+                            <span className="version-name">
+                              {versionProduct.version}
+                            </span>
+                            <span className="version-price">
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(versionProduct.original_price)}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
+              )}
 
               <div className="option-group">
-                <h4>Select Color</h4>
+                <h4>Chọn màu sắc</h4>
                 <div className="option-list">
-                  {/* {product.colors.map((color, index) => (
-                    <button
-                      key={index}
-                      className={`option-item ${
-                        selectedColor === color ? "selected" : ""
-                      }`}
-                      onClick={() => setSelectedColor(color)}
-                    >
-                      {color}
-                    </button>
-                  ))} */}
+                  <div className="no-options">Chỉ có một màu sắc</div>
                 </div>
               </div>
             </div>
 
+            {/* Purchase Buttons */}
             <div className="purchase-buttons">
               <button className="btn-buy-now">Mua ngay</button>
               <button
@@ -302,13 +435,64 @@ const ProductDetailPage = () => {
               </button>
             </div>
 
+            {/* Special Offers */}
             <div className="special-offers-section">
-              <h3>Special Offers</h3>
+              <h3>Ưu đãi đặc biệt</h3>
               <ul className="special-offers-list">
-                {/* {product.specialOffers.map((offer, index) => (
-                  <li key={index}>{offer}</li>
-                ))} */}
+                <li>Miễn phí giao hàng toàn quốc</li>
+                <li>Bảo hành chính hãng 12 tháng</li>
+                <li>Hỗ trợ đổi trả trong 7 ngày</li>
               </ul>
+            </div>
+
+            {/* Product Specifications Section - With toggle functionality */}
+            <div className="product-specifications-section">
+              <h3>Thông số kỹ thuật</h3>
+              <div className="specifications-content">
+                {getLimitedSpecifications().length > 0 ? (
+                  <>
+                    <table className="specifications-table-alt">
+                      <tbody>
+                        {getLimitedSpecifications().map((spec, index) => (
+                          <tr key={spec.id || index}>
+                            <td>{spec.key}</td>
+                            <td>{spec.value}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+
+                    {/* Show More/Less Button for Specifications */}
+                    {hasMoreSpecifications() && (
+                      <div className="specifications-toggle">
+                        <button
+                          className="toggle-button"
+                          onClick={() =>
+                            setShowFullSpecifications(!showFullSpecifications)
+                          }
+                        >
+                          <span>
+                            {showFullSpecifications
+                              ? "Ẩn bớt"
+                              : "Hiển thị thêm"}
+                          </span>
+                          <i
+                            className={`fas ${
+                              showFullSpecifications
+                                ? "fa-chevron-up"
+                                : "fa-chevron-down"
+                            }`}
+                          ></i>
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="no-specifications">
+                    Chưa có thông số kỹ thuật cho sản phẩm này.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>

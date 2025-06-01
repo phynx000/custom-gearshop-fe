@@ -1,0 +1,38 @@
+/* filepath: e:\Project\GearShop\fe\gear-shop-fe\gear-shop\src\components\Product\FeaturedProducts.scss */
+
+.featured-products {
+  .row {
+    margin: 0 -0.75rem;
+  }
+  
+  .col-xl-2,
+  .col-lg-2,
+  .col-md-3,
+  .col-sm-4,
+  .col-6 {
+    padding: 0 0.75rem;
+  }
+}
+
+// Button animations
+.btn {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .featured-products {
+    .col-6 {
+      padding: 0 0.5rem;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+/* filepath: e:\Project\GearShop\fe\gear-shop-fe\gear-shop\src\components\Home\HomePage.scss */
+
+// Main row for category and carousel
+.homepage-main-row {
+  .row {
+    align-items: stretch; // Ensure both columns have same height
+  }
+}
+
+.category-card,
+.carousel-card {
+  height: 100%;
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0 !important; // Remove default padding
+  }
+}
+
+// Set the same height for both category and carousel at all screen sizes
+.category-card,
+.carousel-card {
+  min-height: 400px;
+  max-height: 400px;
+  
+  .card-body {
+    min-height: 400px;
+    max-height: 400px;
+  }
+}
+
+// Additional spacing for homepage layout
+.py-4 {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+// Ensure cards stretch to full height
+.h-100 {
+  height: 100% !important;
+}

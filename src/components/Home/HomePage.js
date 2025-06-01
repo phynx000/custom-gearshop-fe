@@ -3,28 +3,18 @@ import CategorySideBar from "../CategorySideBar/CategorySideBar";
 import BannerCarousel from "../Banner/BannerCasourel";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import SellingPoint from "../Banner/SellingPoint";
-import ListFlashSale from "../Product/ListFlashSale";
-import { getAllProducts } from "../../services/productService";
+import FeaturedProducts from "../Product/FeaturedProducts";
 import { Container, Row, Col, Card } from "react-bootstrap";
+import "./HomePage.scss"; // Add this for additional styling
 
 const HomePage = () => {
-  const handleClick = () => {
-    getAllProducts()
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching product:", error);
-      });
-  };
-
   return (
     <Container fluid className="py-4">
       <Row className="mb-4">
         <Col lg={3} md={4} className="mb-4 mb-md-0">
-          <Card className="h-100 shadow-sm">
-            <Card.Body>
-            <CategorySideBar />
+          <Card className="h-100 shadow-sm category-card">
+            <Card.Body className="p-0">
+              <CategorySideBar />
             </Card.Body>
           </Card>
         </Col>
@@ -41,7 +31,7 @@ const HomePage = () => {
         <Col xs={12}>
           <Card className="shadow-sm">
             <Card.Body>
-          <SellingPoint />
+              <SellingPoint />
             </Card.Body>
           </Card>
         </Col>
@@ -51,10 +41,13 @@ const HomePage = () => {
         <Col xs={12}>
           <Card className="shadow-sm">
             <Card.Header className="bg-white border-bottom">
-              <h5 className="m-0 py-2">Sản phẩm nổi bật</h5>
+              <div className="d-flex align-items-center">
+                <i className="bi bi-star-fill text-warning me-2"></i>
+                <h5 className="m-0 py-2">Sản phẩm nổi bật</h5>
+              </div>
             </Card.Header>
             <Card.Body>
-          <ListFlashSale />
+              <FeaturedProducts groupName="homepage" showTitle={false} />
             </Card.Body>
           </Card>
         </Col>

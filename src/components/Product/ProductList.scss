@@ -134,3 +134,92 @@
     height: 100%;
   }
 }
+
+/* filepath: e:\Project\GearShop\fe\gear-shop-fe\gear-shop\src\components\Product\ProductList.scss */
+
+// Add styles for the show more/less button container
+.d-flex.justify-content-center.gap-3 {
+  .btn {
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border-width: 2px;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    i {
+      transition: transform 0.3s ease;
+    }
+    
+    // Show more button (success variant)
+    &.btn-outline-success {
+      &:hover {
+        background-color: #28a745;
+        border-color: #28a745;
+        
+        i {
+          transform: translateY(2px);
+        }
+      }
+    }
+    
+    // Show less button (secondary variant)
+    &.btn-outline-secondary {
+      &:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        
+        i {
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .d-flex.justify-content-center.gap-3 {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem !important;
+    
+    .btn {
+      width: 100%;
+      max-width: 250px;
+    }
+  }
+}
+
+// Product count styling in header
+.card-header {
+  h4 {
+    small.text-muted {
+      font-weight: 400;
+      font-size: 0.75em;
+    }
+  }
+}
+
+// Animation for button transitions
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.btn:focus {
+  animation: buttonPulse 0.3s ease;
+}
