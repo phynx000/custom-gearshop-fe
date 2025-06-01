@@ -157,11 +157,12 @@ const ProductList = () => {
                   <strong>Kết quả tìm kiếm cho: "{searchInfo.query}"</strong>
                   <div className="mt-1">
                     Tìm được <strong>{searchInfo.totalResults}</strong> sản phẩm
-                    {searchInfo.message && (
+                    liên quan
+                    {/* {searchInfo.message && (
                       <small className="text-muted d-block">
                         {searchInfo.message}
                       </small>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
@@ -185,7 +186,7 @@ const ProductList = () => {
                     <Form.Select
                       className="w-auto"
                       value={sortOption}
-                      onChange={(e) => setSortOption(e.target.value)}
+                      onChange={(e) => handleSortChange(e.target.value)}
                     >
                       {isSearchMode && (
                         <option value="relevance">Độ liên quan</option>
@@ -220,7 +221,7 @@ const ProductList = () => {
                   {isSearchMode && (
                     <Button
                       variant="outline-success"
-                      onClick={() => (window.location.href = "/")}
+                      onClick={() => (window.location.href = "/products")}
                     >
                       Xem tất cả sản phẩm
                     </Button>
