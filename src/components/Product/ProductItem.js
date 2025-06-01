@@ -2,9 +2,11 @@ import React from "react";
 import { Card, Button, Badge } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "./ProductItem.scss";
+import useProductDetail from "../../hook/useProductDetail";
 
 const ProductItem = ({ product }) => {
   const navigate = useNavigate();
+  const { handleAddToCart } = useProductDetail();
 
   // Sử dụng dữ liệu mẫu khi product không được truyền vào
   const demoProduct = {
@@ -37,12 +39,6 @@ const ProductItem = ({ product }) => {
   const handleViewDetails = (e) => {
     e.preventDefault();
     navigate(`/product/${productData.id}`);
-  };
-
-  const handleAddToCart = (e) => {
-    e.preventDefault();
-    // Add to cart functionality can be implemented here
-    console.log("Add to cart:", productData.id);
   };
 
   return (
@@ -100,7 +96,7 @@ const ProductItem = ({ product }) => {
               variant="success"
               size="sm"
               className="text-white"
-              onClick={handleAddToCart}
+              onClick={() => handleAddToCart(productData.id)}
             >
               <i className="bi bi-cart-plus me-1"></i> Thêm vào giỏ
             </Button>

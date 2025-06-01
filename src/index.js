@@ -17,6 +17,7 @@ import AuthProvider from "./components/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute";
 import VnpayReturnPage from "./components/Payment/VnpayReturnPage";
 import OrderSuccessPage from "./components/OrderSuccess/OrderSuccessPage";
+import UserProfile from "./components/UserProfile/UserProfile";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -48,6 +49,14 @@ root.render(
             />
             <Route path="/payment/vnpay-return" element={<VnpayReturnPage />} />
             <Route path="/order-success" element={<OrderSuccessPage />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <UserProfile />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           <Route path="/login" element={<LoginForm />} />

@@ -4,10 +4,9 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import Dropdown from "react-bootstrap/Dropdown";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
 import { getAllCartItem } from "../../services/cartService";
@@ -17,7 +16,7 @@ const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [cartItemsCount, setCartItemsCount] = useState(0);
-  const [cartAnimated, setCartAnimated] = useState(false);
+  const [cartAnimated, setCartAnimated] = useState(false); // Used for cart animation effects
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   // Fetch cart items on component mount and when cart is updated
@@ -91,7 +90,11 @@ const Header = () => {
             </Nav.Link>
           </Nav>
 
-          <Form onSubmit={handleSearch} className="d-flex mx-auto" style={{ maxWidth: "500px" }}>
+          <Form
+            onSubmit={handleSearch}
+            className="d-flex mx-auto"
+            style={{ maxWidth: "500px" }}
+          >
             <InputGroup>
               <Form.Control
                 type="search"
@@ -126,16 +129,28 @@ const Header = () => {
             </Link>
 
             {isAuthenticated ? (
-              <div className="d-flex align-items-center">
-                <span className="me-3">Chào {user.first_name}</span>
-                <Button
+              <Dropdown align="end">
+                <Dropdown.Toggle
                   variant="success"
-                  className="rounded-pill px-3"
-                  onClick={handleLogout}
+                  id="user-dropdown"
+                  className="rounded-pill px-3 d-flex align-items-center"
                 >
-                  Đăng xuất
-                </Button>
-              </div>
+                  <i className="bi bi-person-circle me-2"></i>
+                  {user.first_name}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to="/profile">
+                    <i className="bi bi-person me-2"></i>
+                    Thông tin cá nhân
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={handleLogout}>
+                    <i className="bi bi-box-arrow-right me-2"></i>
+                    Đăng xuất
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             ) : (
               <div className="d-flex">
                 <Link to="/login" className="text-decoration-none me-2">

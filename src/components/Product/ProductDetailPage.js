@@ -3,10 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./ProductDetailPage.scss";
 import useProductDetail from "../../hook/useProductDetail";
 import { getProductVersions } from "../../services/productService";
-import {
-  addProductToCart,
-  showCartNotification,
-} from "../../services/cartService";
+// import {
+//   addProductToCart,
+//   showCartNotification,
+// } from "../../services/cartService";
 
 const ProductDetailPage = () => {
   const { productId } = useParams();
@@ -15,17 +15,16 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedVersion, setSelectedVersion] = useState("");
-  const [selectedColor, setSelectedColor] = useState("Black");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  // const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [productVersions, setProductVersions] = useState([]);
   const [versionsLoading, setVersionsLoading] = useState(false);
   const thumbnailsContainerRef = useRef(null);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showFullSpecifications, setShowFullSpecifications] = useState(false);
-  
-  const { product } = useProductDetail();
+
+  const { product, isAddingToCart, handleAddToCart } = useProductDetail();
 
   console.log("product currently: ", product);
   const images = product.images || [];
@@ -153,17 +152,17 @@ const ProductDetailPage = () => {
     }
   };
 
-  const handleAddToCart = async (productId, quantity) => {
-    try {
-      setIsAddingToCart(true);
-      await addProductToCart(productId, quantity);
-      showCartNotification("Đã thêm sản phẩm vào giỏ hàng!");
-    } catch (error) {
-      showCartNotification("Không thể thêm sản phẩm. Vui lòng thử lại sau.");
-    } finally {
-      setIsAddingToCart(false);
-    }
-  };
+  // const handleAddToCart = async (productId, quantity) => {
+  //   try {
+  //     setIsAddingToCart(true);
+  //     await addProductToCart(productId, quantity);
+  //     showCartNotification("Đã thêm sản phẩm vào giỏ hàng!");
+  //   } catch (error) {
+  //     showCartNotification("Không thể thêm sản phẩm. Vui lòng thử lại sau.");
+  //   } finally {
+  //     setIsAddingToCart(false);
+  //   }
+  // };
 
   if (loading) return <div className="loading">Đang tải sản phẩm...</div>;
   if (error)

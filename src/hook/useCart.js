@@ -1,18 +1,62 @@
-import React, { useState, useEffect } from "react";
-import { getAllCartItem, updateQuantityInCart } from "../services/cartService";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  getAllCartItem,
+  updateQuantityInCart,
+  removeFromCart,
+} from "../services/cartService";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 export const useCart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [cart, setCart] = useState(null);
+  const [error, setError] = useState(null);
 
   // Notify about cart changes
   const notifyCartUpdated = () => {
     window.dispatchEvent(new Event("cartUpdated"));
   };
+
+  const removeItemFromCart = useCallback(
+    async (itemId) => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        await removeFromCart(itemId);
+
+        // Cập nhật cart local sau khi xóa thành công
+        if (cart) {
+          const updatedItems = cart.items.filter((item) => item.id !== itemId);
+          const updatedCart = {
+            ...cart,
+            items: updatedItems,
+            total_price: updatedItems.reduce(
+              (sum, item) => sum + item.price * item.quantity,
+              0
+            ),
+            total_items: updatedItems.reduce(
+              (sum, item) => sum + item.quantity,
+              0
+            ),
+          };
+          setCart(updatedCart);
+        }
+
+        return { success: true };
+      } catch (error) {
+        setError(error.message || "Có lỗi xảy ra khi xóa sản phẩm");
+        return { success: false, error: error.message };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [cart]
+  );
 
   useEffect(() => {
     getAllCartItem()
@@ -40,7 +84,7 @@ export const useCart = () => {
     notifyCartUpdated();
   }, [cartItems]);
 
-  // Calculate total price of selected items
+  // Tính lại tổng tiền
   const totalPrice = selectedItems.reduce((total, itemId) => {
     const item = cartItems.find((item) => item.id === itemId);
     return total + (item ? item.product?.original_price * item.quantity : 0);
@@ -120,6 +164,9 @@ export const useCart = () => {
     handleQuantityChange,
     handleItemSelect,
     handleCheckout,
+    removeItemFromCart,
     notifyCartUpdated,
+    cart,
   };
 };
+

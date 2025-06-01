@@ -94,3 +94,35 @@ export const showCartNotification = (message) => {
     setTimeout(() => document.body.removeChild(toast), 300);
   }, 3000);
 };
+// ...existing code...
+
+// ...existing code...
+
+// Thêm method xóa sản phẩm khỏi giỏ hàng
+export const removeFromCart = async (itemId) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Vui lòng đăng nhập để thực hiện chức năng này");
+    }
+
+    const response = await axios.delete(
+      `${BASE_API_URL}/cart/remove/${itemId}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error removing item from cart:", error);
+    throw error.response?.data || { message: "Có lỗi xảy ra khi xóa sản phẩm" };
+  }
+};
+
+// ...existing code...
+
+// ...existing code...
