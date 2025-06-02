@@ -1,5 +1,4 @@
-import axios from "axios";
-import { BASE_API_URL } from "../config/config";
+import apiClient from "./apiClient";
 
 /**
  * Get user profile information
@@ -7,18 +6,7 @@ import { BASE_API_URL } from "../config/config";
  */
 export const getUserProfile = async () => {
   try {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      throw new Error("Authentication token not found. Please log in again.");
-    }
-
-    const response = await axios.get(`${BASE_API_URL}/user/profile/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
+    const response = await apiClient.get(`/user/profile/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching user profile:", error);
@@ -33,23 +21,7 @@ export const getUserProfile = async () => {
  */
 export const updateUserProfile = async (profileData) => {
   try {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      throw new Error("Authentication token not found. Please log in again.");
-    }
-
-    const response = await axios.patch(
-      `${BASE_API_URL}/user/profile/`,
-      profileData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
+    const response = await apiClient.patch(`/user/profile/`, profileData);
     return response.data;
   } catch (error) {
     console.error("Error updating user profile:", error);
@@ -64,30 +36,7 @@ export const updateUserProfile = async (profileData) => {
  */
 export const getUserOrders = async (filters = {}) => {
   try {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      throw new Error("Authentication token not found. Please log in again.");
-    }
-
-    const params = new URLSearchParams();
-    if (filters.status) params.append("status", filters.status);
-    if (filters.limit) params.append("limit", filters.limit);
-    if (filters.offset) params.append("offset", filters.offset);
-
-    const queryString = params.toString();
-    // const url = queryString
-    //   ? `${BASE_API_URL}/user/orders/?${queryString}`
-    //   : `${BASE_API_URL}/user/orders/`;
-
-    const url = `${BASE_API_URL}/orders/history/`;
-
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
+    const response = await apiClient.get(`/orders/history/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching user orders:", error);
@@ -102,21 +51,7 @@ export const getUserOrders = async (filters = {}) => {
  */
 export const getOrderDetails = async (orderId) => {
   try {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      throw new Error("Authentication token not found. Please log in again.");
-    }
-
-    const response = await axios.get(
-      `${BASE_API_URL}/user/orders/${orderId}/`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
+    const response = await apiClient.get(`/user/orders/${orderId}/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching order details:", error);
@@ -131,23 +66,10 @@ export const getOrderDetails = async (orderId) => {
  */
 export const changePassword = async (passwordData) => {
   try {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      throw new Error("Authentication token not found. Please log in again.");
-    }
-
-    const response = await axios.patch(
-      `${BASE_API_URL}/user/change-password/`,
-      passwordData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
+    const response = await apiClient.patch(
+      `/user/change-password/`,
+      passwordData
     );
-
     return response.data;
   } catch (error) {
     console.error("Error changing password:", error);

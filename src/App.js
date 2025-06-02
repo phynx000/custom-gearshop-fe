@@ -1,14 +1,18 @@
-import logo from "./logo.svg";
 import "./App.scss";
 import Header from "./components/Header/Header";
 import Navigation from "./components/Header/Navigation";
+import Footer from "./components/Footer/Footer";
+import TokenValidator from "./components/TokenValidator";
 import "bootstrap/dist/css/bootstrap.min.css";
-import HomePage from "./components/Home/HomePage";
 import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
     <div className="d-flex flex-column min-vh-100">
+      <TokenValidator />
+
       <header>
         <div className="container-fluid px-lg-5">
           <Header />
@@ -24,15 +28,22 @@ function App() {
         </div>
       </main>
 
-      <footer className="bg-light py-4 mt-auto">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-md-12 text-center">
-              <p className="mb-0">© 2023 Gear Shop - All rights reserved</p>
-            </div>
-          </div>
-        </div>
+      <footer>
+        <Footer />
       </footer>
+
+      {/* Toast Container for notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

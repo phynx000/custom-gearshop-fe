@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./Checkout.scss";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
   createVnpayOrder,
   createCodOrder,
   formatVnpayOrderData,
 } from "../../services/paymentService";
+import { clearCartAfterPayment } from "../../services/cartService";
 import { verifyTokenValidity } from "../../utils/auth";
 
 const Checkout = () => {
@@ -179,6 +179,10 @@ const Checkout = () => {
 
         // Call COD order API
         await createCodOrder(codOrderData);
+
+        // Clear cart after successful COD order
+        await clearCartAfterPayment();
+
         setSuccess(true);
       }
     } catch (err) {

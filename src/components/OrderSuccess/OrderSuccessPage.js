@@ -1,20 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { BsCheckCircleFill } from "react-icons/bs";
+import { clearCartAfterPayment } from "../../services/cartService";
 import styles from "./OrderSuccessPage.module.scss";
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 const OrderSuccessPage = () => {
-  //   const query = useQuery();
-  //   const orderId = query.get("orderId");
   const location = useLocation();
   const orderId = location.state?.orderId;
-  //   console.log("order id: ", orderId);
+  console.log("orderId: ", location.state);
   const navigate = useNavigate();
+
+  // Clear cart when reaching success page (if not already cleared)
+  useEffect(() => {
+    const clearCart = async () => {
+      try {
+        await clearCartAfterPayment();
+        console.log("Cart cleared after successful order");
+      } catch (error) {
+        console.error("Error clearing cart on success page:", error);
+      }
+    };
+
+    clearCart();
+  }, []);
 
   return (
     <Container
@@ -33,6 +42,8 @@ const OrderSuccessPage = () => {
                 <br />
                 <strong>Mã đơn hàng:</strong>{" "}
                 <span className="text-primary">{orderId}</span>
+                {/* <strong>Mã giao dịch:</strong>{" "}
+                <span className="text-primary">TRANSACTION_ID</span> */}
               </Card.Text>
               <Button
                 variant="success"

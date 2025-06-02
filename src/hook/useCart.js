@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   getAllCartItem,
   updateQuantityInCart,
@@ -14,18 +14,15 @@ export const useCart = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [cart, setCart] = useState(null);
-  const [error, setError] = useState(null);
 
   // Notify about cart changes
   const notifyCartUpdated = () => {
     window.dispatchEvent(new Event("cartUpdated"));
   };
-
   const removeItemFromCart = useCallback(
     async (itemId) => {
       try {
         setLoading(true);
-        setError(null);
 
         await removeFromCart(itemId);
 
@@ -49,7 +46,7 @@ export const useCart = () => {
 
         return { success: true };
       } catch (error) {
-        setError(error.message || "Có lỗi xảy ra khi xóa sản phẩm");
+        console.error("Có lỗi xảy ra khi xóa sản phẩm:", error);
         return { success: false, error: error.message };
       } finally {
         setLoading(false);
@@ -89,7 +86,6 @@ export const useCart = () => {
     const item = cartItems.find((item) => item.id === itemId);
     return total + (item ? item.product?.original_price * item.quantity : 0);
   }, 0);
-
   // Handle select all checkbox
   const handleSelectAll = (e) => {
     const checked = e.target.checked;
@@ -98,9 +94,38 @@ export const useCart = () => {
   };
 
   // Handle item deletion
-  const handleDeleteItem = (itemId) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== itemId));
-    setSelectedItems((prev) => prev.filter((id) => id !== itemId));
+  const handleDeleteItem = async (itemId) => {
+    try {
+      setLoading(true);
+
+      // Gọi API để xóa sản phẩm khỏi giỏ hàng
+      await removeFromCart(itemId);
+
+      // Cập nhật state local sau khi xóa thành công
+      setCartItems((prev) => prev.filter((item) => item.id !== itemId));
+      setSelectedItems((prev) => prev.filter((id) => id !== itemId));
+
+      // Hiển thị thông báo thành công
+      toast.success("Đã xóa sản phẩm khỏi giỏ hàng");
+
+      // Notify cart updated
+      notifyCartUpdated();
+    } catch (error) {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+
+      // Show specific error message
+      const errorMessage = error.message || "Có lỗi xảy ra khi xóa sản phẩm";
+      toast.error(errorMessage);
+
+      // If authentication error, potentially redirect to login
+      if (errorMessage.includes("đăng nhập")) {
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Handle quantity change
@@ -150,7 +175,6 @@ export const useCart = () => {
     // Navigate to checkout page
     navigate("/checkout");
   };
-
   return {
     cartItems,
     setCartItems,
@@ -159,6 +183,7 @@ export const useCart = () => {
     selectAll,
     setSelectAll,
     totalPrice,
+    loading,
     handleSelectAll,
     handleDeleteItem,
     handleQuantityChange,
@@ -169,4 +194,3 @@ export const useCart = () => {
     cart,
   };
 };
-

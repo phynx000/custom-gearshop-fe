@@ -16,9 +16,10 @@ const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [cartItemsCount, setCartItemsCount] = useState(0);
-  const [cartAnimated, setCartAnimated] = useState(false); // Used for cart animation effects
+  const [cartAnimated, setCartAnimated] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
   // Fetch cart items on component mount and when cart is updated
   useEffect(() => {
     if (isAuthenticated) {
@@ -43,11 +44,31 @@ const Header = () => {
     }
   }, [isAuthenticated]);
 
-  // Listen for cart updates through window storage events
+  // Listen for cart updates through window events
   useEffect(() => {
-    const handleCartUpdate = () => {
-      const storedCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
-      setCartItemsCount(storedCart.length);
+    const handleCartUpdate = async () => {
+      if (isAuthenticated) {
+        try {
+          // Fetch fresh data from server
+          const data = await getAllCartItem();
+          if (Array.isArray(data)) {
+            setCartItemsCount(data.length);
+            localStorage.setItem("cartItems", JSON.stringify(data));
+          }
+        } catch (error) {
+          // Fallback to localStorage if API call fails
+          const storedCart = JSON.parse(
+            localStorage.getItem("cartItems") || "[]"
+          );
+          setCartItemsCount(storedCart.length);
+        }
+      } else {
+        // If not authenticated, use localStorage
+        const storedCart = JSON.parse(
+          localStorage.getItem("cartItems") || "[]"
+        );
+        setCartItemsCount(storedCart.length);
+      }
 
       // Trigger animation
       setCartAnimated(true);
@@ -61,7 +82,7 @@ const Header = () => {
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
-  }, []);
+  }, [isAuthenticated]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -71,7 +92,6 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Navigate to products page with search query
       navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
@@ -117,7 +137,9 @@ const Header = () => {
           <Nav className="ms-auto d-flex align-items-center">
             <Link
               to="/cart"
-              className="position-relative me-4 text-decoration-none d-flex align-items-center"
+              className={`position-relative me-4 text-decoration-none d-flex align-items-center ${
+                cartAnimated ? "cart-bounce" : ""
+              }`}
             >
               <i className="bi bi-cart3 fs-4 text-dark"></i>
               {cartItemsCount > 0 && (

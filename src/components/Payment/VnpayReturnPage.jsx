@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_API_URL } from "../../config/config";
+import { clearCartAfterPayment } from "../../services/cartService";
 
 const VnpayReturnPage = () => {
   const [searchParams] = useSearchParams();
@@ -31,6 +32,10 @@ const VnpayReturnPage = () => {
           response.data.message === "Thanh toán thành công"
         ) {
           setMessage("Thanh toán thành công");
+
+          // Clear cart after successful payment
+          await clearCartAfterPayment();
+
           // Redirect to order-success page after 3 seconds
           setTimeout(() => {
             const orderId = response.data.order_id;
