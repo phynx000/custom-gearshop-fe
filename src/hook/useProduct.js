@@ -1,8 +1,5 @@
-import { React, useState, useEffect } from "react";
-import {
-  getAllProducts,
-  getProductsByCategory,
-} from "../services/productService";
+import { useState, useEffect } from "react";
+import { getAllProducts, getProductsByCategory } from "../api/productService";
 import { useCategory } from "./useCategory";
 
 const useProduct = () => {

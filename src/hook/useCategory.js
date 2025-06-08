@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { getCategories } from "../services/categoryService";
-import { THREE_DOT_URL_ICON } from "../config/config";
+import { getCategories } from "../api/categoryService";
+import { THREE_DOT_URL_ICON } from "../api/config";
 
 export const useCategory = () => {
   const [categories, setCategories] = useState([]);

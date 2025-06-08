@@ -39,6 +39,7 @@ const authSlice = createSlice({
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
       localStorage.removeItem("user");
+      localStorage.removeItem("cartItems");
     },
   },
 });

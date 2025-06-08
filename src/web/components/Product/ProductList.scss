@@ -1,0 +1,225 @@
+.product-list-container {
+  padding: 20px 0;
+  
+  .product-list-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+    text-align: center;
+    position: relative;
+    
+    &:after {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 3px;
+      background-color: #667eea;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  
+  .product-grid {
+    margin-top: 20px;
+  }
+}
+
+// Filter and sort options (optional for future implementation)
+.filter-options {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  
+  .filter-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .form-select {
+    margin-bottom: 10px;
+    &:focus {
+      border-color: #28a745;
+      box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+    }
+  }
+}
+
+// Pagination (optional for future implementation)
+.pagination-container {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  
+  .pagination {
+    .page-item {
+      .page-link {
+        color: #28a745;
+        border-color: #dee2e6;
+        
+        &:focus {
+          box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+        }
+        
+        &:hover {
+          background-color: rgba(40, 167, 69, 0.1);
+          border-color: #dee2e6;
+          color: #1e7e34;
+        }
+      }
+      
+      &.active .page-link {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .product-list-container {
+    .product-list-title {
+      font-size: 24px;
+    }
+  }
+}
+
+// Hover effect cho card
+.product-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+  }
+}
+
+// Show more button
+.btn-outline-success {
+  &:hover {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+  }
+}
+
+// Responsive styling
+@media (max-width: 767.98px) {
+  .sort-container {
+    margin-top: 1rem;
+    justify-content: flex-start !important;
+  }
+}
+
+// 5 products per row specific styling
+@media (min-width: 992px) {
+  .row-cols-lg-5 > * {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+}
+
+// Make product cards same height in a row
+.row-cols-1, .row-cols-sm-2, .row-cols-md-3, .row-cols-lg-5 {
+  .card {
+    height: 100%;
+  }
+}
+
+/* filepath: e:\Project\GearShop\fe\gear-shop-fe\gear-shop\src\components\Product\ProductList.scss */
+
+// Add styles for the show more/less button container
+.d-flex.justify-content-center.gap-3 {
+  .btn {
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border-width: 2px;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    i {
+      transition: transform 0.3s ease;
+    }
+    
+    // Show more button (success variant)
+    &.btn-outline-success {
+      &:hover {
+        background-color: #28a745;
+        border-color: #28a745;
+        
+        i {
+          transform: translateY(2px);
+        }
+      }
+    }
+    
+    // Show less button (secondary variant)
+    &.btn-outline-secondary {
+      &:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        
+        i {
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .d-flex.justify-content-center.gap-3 {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem !important;
+    
+    .btn {
+      width: 100%;
+      max-width: 250px;
+    }
+  }
+}
+
+// Product count styling in header
+.card-header {
+  h4 {
+    small.text-muted {
+      font-weight: 400;
+      font-size: 0.75em;
+    }
+  }
+}
+
+// Animation for button transitions
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.btn:focus {
+  animation: buttonPulse 0.3s ease;
+}

@@ -1,0 +1,220 @@
+/* filepath: e:\Project\GearShop\fe\gear-shop-fe\gear-shop\src\components\CategorySideBar\CategorySideBar.scss */
+
+.category-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px;
+  max-height: 400px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+
+  
+
+  .category-content {
+    padding : 10px;
+    border: 5px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    // Custom scrollbar styling
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f8f9fa;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #dee2e6;
+      border-radius: 3px;
+      transition: background 0.3s ease;
+      
+      &:hover {
+        background: #adb5bd;
+      }
+    }
+    
+    // Firefox scrollbar styling
+    scrollbar-width: thin;
+    scrollbar-color: #dee2e6 #f8f9fa;
+
+    .list-group {
+      .category-item {
+        // border: none;
+        border-radius: 5px;        border-bottom: 1px solid #f8f9fa;
+        padding: 0.875rem 1.25rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: white;
+
+        &:hover {
+          background: #f8f9fa;
+          border-color: #dee2e6;
+          transform: translateX(5px);
+          
+          .category-icon,
+          .category-icon-img {
+            transform: scale(1.1);
+          }
+          
+          .category-arrow {
+            transform: translateX(3px);
+            color: #28a745;
+          }
+        }
+
+        // &.active {
+        //   background: linear-gradient(135deg, #e8f5e8, #f0fdf4);
+        //   border-color: #28a745;
+        //   color: #155724;
+        //   transform: translateX(8px);
+        //   box-shadow: 0 2px 4px rgba(40, 167, 69, 0.1);
+
+        //   .category-icon {
+        //     color: #28a745;
+        //     transform: scale(1.2);
+        //   }
+
+        //   .category-icon-img {
+        //     transform: scale(1.1);
+        //     filter: brightness(1.1);
+        //   }
+
+        //   .category-name {
+        //     font-weight: 600;
+        //     color: #155724;
+        //   }
+
+        //   .category-arrow {
+        //     color: #28a745;
+        //     transform: translateX(5px) scale(1.2);
+        //   }
+
+        //   .product-count {
+        //     background: #28a745 !important;
+        //     color: white !important;
+        //     border-color: #28a745;
+        //   }
+        // }
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .category-icon {
+          color: #6c757d;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+          width: 20px;
+          text-align: center;
+        }
+
+        .category-icon-img {
+          transition: all 0.3s ease;
+          border-radius: 4px;
+          object-fit: cover;
+          width: 20px;
+          height: 20px;
+        }
+
+        .category-name {
+          color: #495057;
+          font-size: 0.9rem;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          line-height: 1.4;
+          flex: 1;
+        }
+
+        .product-count {
+          font-size: 0.7rem;
+          padding: 0.25rem 0.5rem;
+          border-radius: 10px;
+          background: #dee2e6 !important;
+          color: #6c757d !important;
+          border: 1px solid #dee2e6;
+          transition: all 0.3s ease;
+          min-width: 28px;
+          text-align: center;
+        }
+
+        .category-arrow {
+          color: #adb5bd;
+          font-size: 0.8rem;
+          transition: all 0.3s ease;
+          margin-left: 0.5rem;
+        }
+
+        // Special styling for "All Products" item
+        &:first-child {
+          .category-icon {
+            color: #17a2b8;
+          }
+          
+          &:hover .category-icon,
+          &.active .category-icon {
+            color: #17a2b8;
+          }
+          
+        //   &.active {
+        //     background: linear-gradient(135deg, #e8f7f9, #f0fdff);
+        //     border-color: #17a2b8;
+        //     color: #0c5460;
+            
+        //     .category-name {
+        //       color: #0c5460;
+        //     }
+            
+        //     .category-arrow {
+        //       color: #17a2b8;
+        //     }
+
+        //     .product-count {
+        //       background: #17a2b8 !important;
+        //       color: white !important;
+        //       border-color: #17a2b8;
+        //     }
+        //   }
+        }
+      }
+    }
+  }
+
+  // Loading and error states
+  .spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .alert {
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+}
+
+// Animation for smooth scrolling
+.category-content {
+  scroll-behavior: smooth;
+}
+
+// Fade effect at the bottom to indicate more content
+.category-sidebar {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 15px;
+    background: linear-gradient(transparent, rgba(255, 255, 255, 0.9));
+    pointer-events: none;
+    z-index: 1;
+  }
+}

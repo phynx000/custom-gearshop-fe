@@ -9,8 +9,8 @@ body {
 }
 
 // Bootstrap color overrides
-$primary: #0d6efd;
-$success: #1fad4a;
+$primary: #667eea;
+$success: #28a745;
 $danger: #dc3545;
 $light: #f8f9fa;
 
@@ -103,12 +103,12 @@ $light: #f8f9fa;
       padding:0 10px;
       margin: 0 10px;
       height: 50px;
-      background-color: #1fad4a;
+      background-color: #28a745;
       color: #fff;
       border: none;
 
       &:hover {
-        background-color: #188739;
+        background-color: #1e7e34;
       }
     }
 
@@ -117,12 +117,12 @@ $light: #f8f9fa;
       border-radius: 5px;
       padding:0 17px;
       height: 50px;
-      background-color: #1fad4a;
+      background-color: #28a745;
       color: #fff;
       border: none;
 
       &:hover {
-        background-color: #188739;
+        background-color: #1e7e34;
       }
     }
 
@@ -134,12 +134,12 @@ $light: #f8f9fa;
       border-radius: 5px;
       padding:0 17px;
       height: 50px;
-      background-color: #1fad4a;
+      background-color: #28a745;
       color: #fff;
       border: none;
 
       &:hover {
-        background-color: #188739;
+        background-color: #1e7e34;
       }
     }
   }
@@ -164,7 +164,7 @@ $light: #f8f9fa;
     }
 
     .navbar {
-      background-color:#1fad4a!important;
+      background-color:#28a745!important;
       z-index: 10;
     }
   

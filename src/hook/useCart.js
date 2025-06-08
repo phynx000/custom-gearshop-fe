@@ -3,7 +3,7 @@ import {
   getAllCartItem,
   updateQuantityInCart,
   removeFromCart,
-} from "../services/cartService";
+} from "../api/cartService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 

@@ -3,7 +3,7 @@ import {
   getUserProfile,
   getUserOrders,
   updateUserProfile,
-} from "../services/userService";
+} from "../api/userService";
 
 export const useUserProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -88,10 +88,9 @@ export const useUserOrders = (filters = {}) => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     loadOrders(filters);
-  }, []);
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     orders,

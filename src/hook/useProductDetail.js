@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getProductById } from "../services/productService";
-import {
-  addProductToCart,
-  showCartNotification,
-} from "../services/cartService";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getProductById } from "../api/productService";
+import { addProductToCart, showCartNotification } from "../api/cartService";
 
 const useProductDetail = () => {
   const { productId } = useParams();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,6 +16,12 @@ const useProductDetail = () => {
   //   console.log("productId", productId);
 
   const handleAddToCart = async (productId, quantity) => {
+    if (!isAuthenticated) {
+      showCartNotification("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      navigate("/login");
+      return;
+    }
+
     try {
       setIsAddingToCart(true);
       await addProductToCart(productId, quantity);
