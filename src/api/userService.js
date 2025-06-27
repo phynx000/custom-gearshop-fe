@@ -76,3 +76,32 @@ export const changePassword = async (passwordData) => {
     throw error;
   }
 };
+
+/**
+ * Check user role information
+ * @returns {Promise} Promise with user role data
+ */
+export const checkUserRole = async () => {
+  try {
+    const response = await apiClient.get(`/user/check-role/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error checking user role:", error);
+    throw error;
+  }
+};
+
+/**
+ * Register a new user
+ * @param {Object} userData - User registration data
+ * @returns {Promise} Promise with registration response
+ */
+export const registerUser = async (userData) => {
+  try {
+    const response = await apiClient.post(`/register/`, userData);
+    return response.data;
+  } catch (error) {
+    console.error("Error during registration:", error);
+    throw error;
+  }
+};

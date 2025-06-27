@@ -1,0 +1,426 @@
+.admin-orders {
+  .page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    color: white;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 0;
+    }
+  }
+
+  .stats-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 120px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .stats-content {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .stats-icon {
+      font-size: 2.5rem;
+      margin-right: 1rem;
+      opacity: 0.8;
+      width: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stats-info {
+      flex: 1;
+
+      h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+        color: #2c3e50;
+      }
+
+      p {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+        color: #7f8c8d;
+        font-weight: 500;
+      }
+    }
+
+    &.stats-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+
+      .stats-info h3,
+      .stats-info p {
+        color: white;
+      }
+
+      .stats-icon {
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+
+    &.stats-success {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+
+      .stats-info h3,
+      .stats-info p {
+        color: white;
+      }
+
+      .stats-icon {
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+
+    &.stats-warning {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+
+      .stats-info h3,
+      .stats-info p {
+        color: white;
+      }
+
+      .stats-icon {
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+
+    &.stats-danger {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      color: white;
+
+      .stats-info h3,
+      .stats-info p {
+        color: white;
+      }
+
+      .stats-icon {
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+
+    &.stats-info {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      color: white;
+
+      .stats-info h3,
+      .stats-info p {
+        color: white;
+      }
+
+      .stats-icon {
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+  }
+
+  .filters-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .form-control,
+    .form-select {
+      border-radius: 10px;
+      border: 1px solid #e0e6ed;
+      padding: 0.75rem 1rem;
+      
+      &:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      }
+    }
+
+    .input-group-text {
+      border-radius: 10px 0 0 10px;
+      border: 1px solid #e0e6ed;
+      background-color: #f8f9fa;
+      color: #6c757d;
+    }
+
+    .btn {
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  .orders-table-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-bottom: 1px solid #dee2e6;
+      border-radius: 15px 15px 0 0 !important;
+      padding: 1.25rem 1.5rem;
+
+      .card-title {
+        font-weight: 600;
+        color: #495057;
+        font-size: 1.1rem;
+
+        i {
+          color: #6c757d;
+        }
+      }
+    }
+
+    .card-footer {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-top: 1px solid #dee2e6;
+      border-radius: 0 0 15px 15px !important;
+      padding: 1rem 1.5rem;
+    }
+
+    .table {
+      th {
+        font-weight: 600;
+        color: #495057;
+        border-top: none;
+        padding: 1rem 1.5rem;
+        font-size: 0.9rem;
+        background-color: #f8f9fa;
+      }
+
+      td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+        border-top: 1px solid #f8f9fa;
+      }
+
+      tbody tr {
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #f8f9fa;
+          transform: scale(1.01);
+        }
+      }
+    }
+
+    .customer-info {
+      .customer-name {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
+      }
+    }
+
+    .products-summary {
+      font-size: 0.9rem;
+      color: #495057;
+    }
+
+    .payment-info {
+      font-size: 0.9rem;
+    }
+
+    .order-date {
+      font-size: 0.9rem;
+      color: #495057;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.25rem;
+
+      .btn {
+        border-radius: 8px;
+        padding: 0.375rem 0.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+
+  .order-details {
+    .table {
+      th,
+      td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+      }
+
+      tfoot th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #495057;
+      }
+    }
+
+    h6 {
+      color: #495057;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+
+      strong {
+        color: #2c3e50;
+      }
+    }
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+
+  .pagination {
+    .page-link {
+      border-radius: 8px;
+      margin: 0 0.125rem;
+      border: 1px solid #dee2e6;
+      color: #6c757d;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #667eea;
+        border-color: #667eea;
+        color: white;
+        transform: translateY(-2px);
+      }
+    }
+
+    .page-item.active .page-link {
+      background-color: #667eea;
+      border-color: #667eea;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .admin-orders {
+    .page-header {
+      padding: 1.5rem;
+      text-align: center;
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .page-subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    .stats-card {
+      height: auto;
+      margin-bottom: 1rem;
+
+      .stats-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .stats-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+
+      .stats-info h3 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .filters-card .card-body {
+      padding: 1rem;
+    }
+
+    .action-buttons {
+      flex-wrap: wrap;
+    }
+
+    .table-responsive {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-orders {
+    .page-header {
+      .page-title {
+        font-size: 1.75rem;
+      }
+    }
+
+    .stats-card .stats-info h3 {
+      font-size: 1.25rem;
+    }
+
+    .orders-table-card .table th,
+    .orders-table-card .table td {
+      padding: 0.75rem 0.5rem;
+    }
+
+    .action-buttons .btn {
+      padding: 0.25rem 0.375rem;
+      font-size: 0.8rem;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Container, Row, Col, Card, Nav, Alert } from "react-bootstrap";
 import { useUserProfile, useUserOrders } from "../../../hook/useUserProfile";
 import UserProfileInfo from "./UserProfileInfo";
@@ -16,6 +16,11 @@ const UserProfile = () => {
     error: ordersError,
     refreshOrders,
   } = useUserOrders();
+  
+  // Memoize the refreshOrders callback to maintain stable reference
+  const handleRefreshOrders = useCallback(() => {
+    refreshOrders();
+  }, [refreshOrders]);
 
   if (loading) {
     return (
@@ -129,14 +134,12 @@ const UserProfile = () => {
                 onUpdate={updateProfile}
                 updating={updating}
               />
-            )}
-
-            {activeTab === "orders" && (
+            )}            {activeTab === "orders" && (
               <UserOrderHistory
                 orders={orders}
                 loading={ordersLoading}
                 error={ordersError}
-                onRefresh={refreshOrders}
+                onRefresh={handleRefreshOrders}
               />
             )}
             {activeTab === "password" && <UserPasswordChange />}

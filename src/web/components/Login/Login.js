@@ -32,8 +32,8 @@ const LoginForm = () => {
       //  Cập nhật Redux store
       dispatch(loginSuccess(user));
 
-      // Có thể redirect sang trang chính
-      navigate("/"); // hoặc navigate("/dashboard")
+      // Điều hướng đến trang check role để xác định trang đích phù hợp
+      navigate("/check-role");
     } catch (error) {
       alert("Sai tài khoản hoặc mật khẩu!");
       console.error("Login failed:", error);

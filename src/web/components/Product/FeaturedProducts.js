@@ -16,10 +16,10 @@ const FeaturedProducts = ({ groupName = "homepage", showTitle = false }) => {
       setLoading(true);
       setError(null);
 
-      console.log("Loading featured products for group:", groupName);
+      // console.log("Loading featured products for group:", groupName);
       const data = await getFeaturedProducts(groupName);
 
-      console.log("Featured products response:", data);
+      // console.log("Featured products response:", data);
 
       // Validate the data structure
       if (!data || typeof data !== "object") {
@@ -35,7 +35,7 @@ const FeaturedProducts = ({ groupName = "homepage", showTitle = false }) => {
           product && typeof product === "object" && product.id && product.name
       );
 
-      console.log("Valid products:", validProducts.length);
+      // console.log("Valid products:", validProducts.length);
 
       setProducts(validProducts);
       setGroupInfo({

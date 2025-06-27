@@ -53,7 +53,7 @@ export const getFeaturedProducts = async (groupName = "homepage") => {
 
     // Transform the response to match our component's expected format
     const group = response.data;
-    console.log("Featured products group:", group);
+    // console.log("Featured products group:", group);
 
     // Ensure featured_products exists and is an array
     if (!group.featured_products || !Array.isArray(group.featured_products)) {
@@ -162,6 +162,28 @@ export const getProvinces = async () => {
   } catch (error) {
     console.error("Error fetching provinces:", error);
     throw error;
+  }
+};
+
+// Get all brands
+export const getBrands = async () => {
+  try {
+    const response = await axios.get(`${BASE_API_URL}/brands/`);
+    return response.data || [];
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+    return [];
+  }
+};
+
+// Get all branches
+export const getBranches = async () => {
+  try {
+    const response = await axios.get(`${BASE_API_URL}/branches/`);
+    return response.data || [];
+  } catch (error) {
+    console.error("Error fetching branches:", error);
+    return [];
   }
 };
 

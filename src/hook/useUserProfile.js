@@ -55,17 +55,26 @@ export const useUserProfile = () => {
   };
 };
 
-export const useUserOrders = (filters = {}) => {
+export const useUserOrders = (initialFilters = {}) => {
+  const [filters, setFilters] = useState(initialFilters);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({});
-
-  const loadOrders = async (newFilters = filters) => {
+  const loadOrders = async (newFilters = null) => {
     try {
+      // If new filters are provided, update the state
+      if (newFilters !== null) {
+        setFilters(newFilters);
+      }
+      
+      // Use the current filters state or the newFilters if provided
+      const filtersToUse = newFilters !== null ? newFilters : filters;
+      
+      console.log('Loading orders with filters:', filtersToUse);
       setLoading(true);
       setError(null);
-      const ordersData = await getUserOrders(newFilters);
+      const ordersData = await getUserOrders(filtersToUse);
 
       // Handle different response structures
       if (ordersData.results) {
@@ -88,9 +97,11 @@ export const useUserOrders = (filters = {}) => {
       setLoading(false);
     }
   };
+    // Only run once on component mount
   useEffect(() => {
-    loadOrders(filters);
-  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
+    console.log('UserOrders useEffect: Initial load');
+    loadOrders();
+  }, []); // Empty dependency array means it only runs once on mount
 
   return {
     orders,

@@ -10,11 +10,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../../redux/slices/authSlice";
 import { getAllCartItem } from "../../../api/cartService";
+import { useUserRole } from "../../../hook/useUserRole";
+import { hasAdminAccess } from "../../../utils/roleUtils";
+import UserRoleBadge from "./UserRoleBadge";
 import "./Header.scss";
 
 const Header = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const { roleData } = useUserRole();
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const [cartAnimated, setCartAnimated] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -167,6 +171,7 @@ const Header = () => {
                 >
                   <i className="bi bi-person-circle me-2"></i>
                   {user.first_name}
+                  <UserRoleBadge />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
@@ -174,6 +179,15 @@ const Header = () => {
                     <i className="bi bi-person me-2"></i>
                     Thông tin cá nhân
                   </Dropdown.Item>
+                  {roleData && hasAdminAccess(roleData) && (
+                    <>
+                      <Dropdown.Divider />
+                      <Dropdown.Item as={Link} to="/admin">
+                        <i className="bi bi-gear me-2"></i>
+                        Quản trị hệ thống
+                      </Dropdown.Item>
+                    </>
+                  )}
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={handleLogout}>
                     <i className="bi bi-box-arrow-right me-2"></i>

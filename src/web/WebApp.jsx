@@ -12,6 +12,7 @@ import LoginForm from "./components/Login/Login";
 import SignUpForm from "./components/Login/Signup";
 import VnpayReturnPage from "./components/Payment/VnpayReturnPage";
 import OrderSuccessPage from "./components/OrderSuccess/OrderSuccessPage";
+import RoleTestPage from "./components/Role/RoleTestPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 const WebApp = () => {
@@ -39,13 +40,21 @@ const WebApp = () => {
           }
         />
         <Route path="payment/vnpay-return" element={<VnpayReturnPage />} />
-        <Route path="order-success" element={<OrderSuccessPage />} />
+        <Route path="order-success" element={<OrderSuccessPage />} />{" "}
         <Route path="contact" element={<ContactPage />} />
         <Route
           path="profile"
           element={
             <ProtectedRoute>
               <UserProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="role-test"
+          element={
+            <ProtectedRoute>
+              <RoleTestPage />
             </ProtectedRoute>
           }
         />

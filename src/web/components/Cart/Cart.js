@@ -5,8 +5,11 @@ import { useCart } from "../../../hook/useCart";
 const Cart = () => {
   const {
     cartItems,
+    setCartItems,
     selectedItems,
+    setSelectedItems,
     selectAll,
+    setSelectAll,
     totalPrice,
     loading,
     handleSelectAll,
@@ -14,64 +17,16 @@ const Cart = () => {
     handleQuantityChange,
     handleItemSelect,
     handleCheckout,
+    removeItemFromCart,
+    notifyCartUpdated,
+    cart,
+    confirmDelete,
+    handleConfirmDelete,
+    handleCancelDelete,
+    handleDeleteSelected,
+    showDeleteModal,
+    itemToDelete,
   } = useCart();
-
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
-
-  const confirmDelete = (item) => {
-    setItemToDelete(item);
-    setShowDeleteModal(true);
-  };
-  const handleConfirmDelete = async () => {
-    if (itemToDelete) {
-      if (itemToDelete.isMultiple) {
-        // Xóa nhiều sản phẩm
-        await handleConfirmDeleteSelected();
-      } else {
-        // Xóa một sản phẩm
-        await handleDeleteItem(itemToDelete.id);
-        setShowDeleteModal(false);
-        setItemToDelete(null);
-      }
-    }
-  };
-  const handleCancelDelete = () => {
-    setShowDeleteModal(false);
-    setItemToDelete(null);
-  };
-
-  const handleDeleteSelected = () => {
-    if (selectedItems.length > 0) {
-      setShowDeleteModal(true);
-      setItemToDelete({ isMultiple: true, count: selectedItems.length });
-    }
-  };
-  const handleConfirmDeleteSelected = async () => {
-    try {
-      const totalItems = selectedItems.length;
-      let deletedCount = 0;
-
-      // Xóa tất cả sản phẩm đã chọn tuần tự với feedback
-      for (const itemId of selectedItems) {
-        await handleDeleteItem(itemId);
-        deletedCount++;
-
-        // Update progress (optional: could show progress in modal)
-        console.log(`Đã xóa ${deletedCount}/${totalItems} sản phẩm`);
-      }
-
-      setShowDeleteModal(false);
-      setItemToDelete(null);
-
-      // Show success message for bulk deletion
-      if (deletedCount === totalItems) {
-        console.log(`Đã xóa thành công ${deletedCount} sản phẩm khỏi giỏ hàng`);
-      }
-    } catch (error) {
-      console.error("Lỗi khi xóa sản phẩm:", error);
-    }
-  };
 
   console.log("cartitems: ...", cartItems);
 
